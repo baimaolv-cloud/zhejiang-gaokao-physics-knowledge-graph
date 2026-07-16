@@ -1,0 +1,36 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浙江新高考物理 · 考点知识图谱系统 · 产品首页</title>
+<style>
+body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;margin:0;background:#f1f5f9;color:#1e293b}
+header{background:linear-gradient(120deg,#1e3a8a,#0f766e);color:#fff;padding:34px 28px}
+header h1{margin:0 0 6px;font-size:26px} header p{margin:0;opacity:.9}
+main{max-width:980px;margin:0 auto;padding:26px 20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:18px 0}
+.mod{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px;text-decoration:none;color:inherit;display:block;transition:.15s}
+.mod:hover{transform:translateY(-3px);box-shadow:0 8px 22px rgba(0,0,0,.1);border-color:#2563eb}
+.mod h3{margin:0 0 6px;color:#1d4ed8} .mod p{margin:0;font-size:13px;color:#64748b;line-height:1.7}
+.sec{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:18px 22px;margin:18px 0}
+.sec h2{margin-top:0;color:#0f766e;font-size:18px}
+code{background:#1e293b;color:#e2e8f0;padding:2px 7px;border-radius:5px;font-size:12px}
+footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
+</style></head><body>
+<header><h1>浙江新高考物理 · 考点知识图谱系统</h1><p>命卷人视角 · 离线单机产品 · 版本 v1.1 · 完全离线 / 零依赖 / 可二次开发</p></header>
+<main>
+<div class="grid">
+<a class="mod" href="modules/knowledge-graph.html"><h3>① 知识图谱总览</h3><p>6 大模块 → 27 主考点两级结构，标注分值权重，全局把握命题重心。</p></a>
+<a class="mod" href="modules/detailed-graph.html"><h3>② 考点细化与真题体系</h3><p>27 考点 · 123 细分 · 每点配真题（27 道真实浙江选考真题）+ 易错/易混/妙法 + 动态演示。</p></a>
+<a class="mod" href="modules/demos.html"><h3>③ 课堂演示版</h3><p>纯仿真投屏页，按模块铺开 27 考点动态演示，含命题陷阱浮层。</p></a>
+<a class="mod" href="docs/practice.html"><h3>④ 真题练习册</h3><p>同体系可打印 / 组卷文字版，离线可读。</p></a>
+</div>
+<div class="sec"><h2>使用说明</h2>
+<p>1. 双击 <code>index.html</code> 进入本首页，点击上方卡片打开对应模块；<br>
+2. 所有模块均为<strong>自包含 HTML</strong>，断网可用，无需服务器；<br>
+3. 动态演示依赖浏览器 JavaScript（默认开启）；<br>
+4. 二次开发：<code>modules/</code> 放三大交互页，<code>docs/</code> 放练习册与文档，源数据在 <code>gen_detailed.py</code> 中维护。</p></div>
+<div class="sec"><h2>版本与更新</h2>
+<p>当前版本 <code>v1.1</code>。详细变更见 <code>docs/CHANGELOG.md</code>。<br>
+核心能力：知识图谱 → 考点细化 → 易错易混妙法 → 动态演示 → 真题练习，五层递进。</p></div>
+</main>
+<footer>杭州白毛驴爱科科技 · 命卷人视角出品 · 本产品仅供教研与教学使用</footer>
+</body></html>

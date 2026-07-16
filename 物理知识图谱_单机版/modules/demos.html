@@ -1,0 +1,528 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浙江新高考物理 · 动态演示单页（课堂版）</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#0f172a;color:#e2e8f0}
+  header{background:linear-gradient(120deg,#0f172a,#1e293b);color:#fff;padding:16px 22px}
+  header h1{margin:0;font-size:19px} header p{margin:4px 0 0;font-size:12px;color:#94a3b8}
+  #grid{padding:18px;display:flex;flex-direction:column;gap:18px}
+  .mod-sec{background:#1e293b;border-radius:14px;padding:14px 16px}
+  .mod-sec h2{margin:0 0 12px;font-size:17px;padding-left:10px;border-left:5px solid #38bdf8}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(360px,1fr));gap:14px}
+  .dcard{background:#0f172a;border:1px solid #334155;border-radius:12px;padding:12px}
+  .dtitle{font-size:14px;font-weight:800;padding:6px 10px;background:#1e293b;border-radius:8px;margin-bottom:8px}
+  .demo canvas{width:100%;max-width:480px;background:#0b1220;border-radius:8px;display:block}
+  .demo .ctrls{display:flex;flex-wrap:wrap;gap:12px;margin-top:8px}
+  .demo label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:#cbd5e1}
+  .demo input[type=range]{width:140px}
+  .demo .read{font-size:12px;color:#7dd3fc;margin-top:6px;font-weight:600}
+  .trap{margin-top:10px;padding:9px 12px;background:#431407;border:1px solid #fb923c;border-left:4px solid #f97316;border-radius:0 10px 10px 0;font-size:12px;line-height:1.6;color:#fed7aa}
+  .trap b{color:#fdba74}
+  footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
+</style></head><body>
+<header>
+  <h1>浙江新高考物理 · 动态演示单页（课堂投屏版）</h1>
+  <p>命卷人视角 · 27 个主知识点全部配可拖拽参数仿真 · 真实量纲 · 每演示附「命题陷阱」提示 · 按模块分组</p>
+</header>
+<div id="grid"></div>
+<footer>拖动每个演示的滑块观察参数关系；⚠ 命题陷阱提示常见失分点。纯演示版不含真题面板，便于课堂直接投屏。</footer>
+<script>
+const DATA = [{"name": "力学", "color": "#2563eb", "en": "Mechanics", "points": [{"name": "运动的描述", "sub": ["质点与参考系", "时间与时刻、位移与路程", "矢量与标量", "平均速度与瞬时速度"], "exam": {"src": "2024年6月·浙江选考", "tag": "矢量与标量", "q": "下列物理量中，属于矢量的是（ ）  A.位移  B.时间  C.电流  D.热量", "a": "A。位移是矢量；时间、热量为标量；电流虽有方向但为标量。", "note": "矢量/标量是浙江卷选择题Ⅰ的常驻送分题，须辨析'有方向≠矢量'（电流、功、功率均标量）。"}, "pit": ["位移是矢量、大小≤路程，常把路程当位移大小代入", "平均速度=位移/时间(矢量)，平均速率=路程/时间(标量)，二者常混", "物体运动快≠加速度大：速度大可匀速(a=0)，加速度大可速度很小"], "con": ["速度 vs 速率：前者矢量带方向，后者标量只论大小", "速度 vs 加速度：加速度描述速度变化快慢，与速度大小无必然联系"], "tip": "位移看起点终点、带箭头是矢量；路程看轨迹、只计长度。平均速度对位移，平均速率对路程——记牢「矢量对位移，标量对路程」", "demo": "vector"}, {"name": "匀变速直线运动", "sub": ["加速度概念", "速度-时间关系与公式", "自由落体", "v-t / x-t 图像", "追及与相遇"], "exam": {"src": "2018年11月·浙江选考", "tag": "v-t 图像·面积=位移", "q": "一辆汽车沿平直道路行驶，其 v-t 图像如图所示。在 t=0 到 t=40 s 这段时间内，汽车的位移是（ ）  A.0  B.30 m  C.750 m  D.1200 m", "a": "C。v-t 图线与时间轴围成的面积即位移：x=(10+40)/2×30=750 m（梯形面积）。", "note": "浙江卷对'图像面积=位移''斜率=加速度'的读图能力考查极稳，注意非规则图线要分段求面积。"}, "pit": ["不先定正方向就代公式，a 符号错乱", "把 x-t 图面积当位移(错！只有 v-t 图面积才是位移)；x-t 斜率才是速度", "自由落体忘初速度=0、忘 g 方向"], "con": ["v-t 图(面积=位移、斜率=加速度) vs x-t 图(斜率=速度、面积无物理意义)", "加速度正负表方向非大小；与速度同向加速、反向减速"], "tip": "图像先定轴：v-t 看斜看面积，x-t 只把斜率瞧；追及先找速度等，距离极值那一秒。符号统一先取正，公式代入不乱套。", "demo": "vgraph"}, {"name": "相互作用与力", "sub": ["重力、弹力、摩擦力", "力的合成与分解", "共点力平衡", "受力分析规范"], "exam": {"src": "2023年6月·浙江选考", "tag": "共点力平衡", "q": "水平面上固定两排平行半圆柱体，重为 G 的光滑圆柱体静置其上，a、b 为相切点，半径 Ob 与重力夹角 37°。已知 sin37°=0.6、cos37°=0.8，则两支持力 Fa、Fb 大小为（ ）", "a": "由对称与平衡：Fa=Fb=G/(2cos37°)=5G/8。选 D。", "note": "'光滑接触+对称'是浙江平衡题高频原型，须熟练画受力图并用正交分解。"}, "pit": ["弹力有无判错：接触+挤压+形变才生弹力，绳只能拉不能推", "摩擦力方向「与相对运动/相对趋势方向相反」，常误成「与运动方向相反」", "合力可小于任一分力(夹角>90°时)，并非合力一定最大"], "con": ["静摩擦 vs 滑动摩擦：方向都沿相对方向，静摩擦大小由平衡或动力学定", "作用力 vs 合力：前者是某具体力，后者是矢量和"], "tip": "受力分析四步：一重二弹三摩擦四其他。弹力看形变、摩擦看相对；方向各找「相对」说，别和运动方向搞。", "demo": "balance"}, {"name": "牛顿运动定律", "sub": ["牛顿第一定律与惯性", "牛顿第二定律 F=ma", "牛顿第三定律", "超重与失重", "连接体问题"], "exam": {"src": "2024年6月·浙江选考", "tag": "牛顿第三定律·相互作用", "q": "小猫蹬地跃起腾空追蝶。下列说法正确的是（ ）  A.飞行蝴蝶只受重力  B.蝴蝶转弯合力沿运动方向  C.小猫在空中受重力和弹力  D.小猫蹬地时弹力大于所受重力", "a": "D。蹬地加速向上，地面弹力>重力；离地后无弹力。", "note": "常考'弹力存在条件'与'加速时合力方向'，注意空中无支撑弹力。"}, "pit": ["把某个作用力当合外力代 F=ma", "超重失重看加速度方向，不看速度方向；匀速再快也不超重", "连接体整体法忽略系统外力与内力的区别"], "con": ["惯性 vs 质量：惯性只与质量有关，与速度无关(速度大≠惯性大)", "作用力反作用力 vs 平衡力：前者异体、后者同体；前者必同性、后者可不同"], "tip": "牛二同体合力依，牛三同体异(异体)。超重失重看 a 向：向上超重向下失，与速度方向没关系。", "demo": "newton2"}, {"name": "曲线运动（平抛·圆周）", "sub": ["运动合成与分解", "平抛运动规律", "圆周运动向心力", "临界问题（绳/杆/盘）"], "exam": {"src": "2017年11月·浙江选考", "tag": "圆周运动临界·向心力来源", "q": "照片中汽车在水平路面上做匀速圆周运动，已知双向四车道总宽约15m，内车道边缘间最远距离为150m。假设汽车受到的最大静摩擦力等于车重的0.7倍，则（ ）  A.所受合力可能为零  B.只受重力和地面支持力作用  C.最大速度不能超过25m/s  D.所需向心力由重力和支持力的合力提供", "a": "C。圆心在车道中线，半径 R=0.5×150+15=90m；由 0.7mg=mv²/R 得 v=√(0.7gR)≈25m/s。", "note": "圆周运动'向心力由谁提供'是浙江高频设问；水平路面由静摩擦力提供，临界即最大静摩擦力。"}, "pit": ["平抛分解错：应水平匀速、竖直自由落体，常把竖直当匀速", "把向心力当成新力：它是效果力，由其他力(或分力)提供", "竖直圆周临界混淆：绳模型最高点 vmin=√gr，杆模型 v 可为零"], "con": ["平抛(a=g 恒定，匀变速曲线) vs 斜抛(同样分解，只初速含水平+竖直分量)", "向心力(合力指向圆心) vs 离心力(不存在，是惯性表现/合外力不足)"], "tip": "平抛拆两路：水平走直线、竖直自由落。圆周向心力是效果非外力；绳杆临界分：最高点 √gr 是绳的命，杆可为零莫硬记。", "demo": "projectile"}, {"name": "万有引力与航天", "sub": ["开普勒定律", "万有引力定律", "黄金代换 gR²=GM", "卫星参量比较", "宇宙速度与变轨"], "exam": {"src": "2023年·浙江选考", "tag": "参考系（航天情境）", "q": "“神舟十五号”飞船与“天和”核心舱成功对接后在轨运行。下列说法正确的是（ ）  A.选地球为参考系“天和”静止  B.选地球为参考系“神舟十五号”静止  C.选“天和”为参考系“神舟十五号”静止  D.选“神舟十五号”为参考系“天和”运动", "a": "C。对接后两者相对静止，以任一为参考系另一均静止。", "note": "浙江常以空间站/卫星为情境考参考系与圆周参量；注意'对接后共速'这一隐含条件。"}, "pit": ["黄金代换 GM=gR² 只在星球表面或附近用，高空不能直接代 g", "同步卫星轨道唯一：赤道上空、T=24h、轨道半径固定", "变轨判断反：离心(到高轨)要加速，近心(到低轨)要减速"], "con": ["三参量公式 a=GM/r²、v=√(GM/r)、ω/T 与 r 的关系(越高越慢)", "发射速度(挣脱地表) vs 环绕速度(圆轨道 v=√(GM/r))"], "tip": "高轨低速大周期，越远越慢记心里。黄金代换 gR²=GM，表面附近代 g 用。变轨想清楚：离心要加速、近心要减速。", "demo": "circle"}, {"name": "机械能守恒定律", "sub": ["功与功率", "动能定理", "重力势能与弹性势能", "机械能守恒条件", "功能关系"], "exam": {"src": "2023年6月·浙江选考（力学计算节选）", "tag": "机械能守恒·圆周最低点", "q": "质量为3m的滑块a以初速度v₀从D处进入半径为R的竖直圆弧管道DEF，不计摩擦。求：(1)到达管道最低点F时速度大小vF；(2)在F点所受支持力FN。", "a": "(1)机械能守恒：½·3m·v₀²+3mg·2R=½·3m·vF² → vF=√(v₀²+4gR)；(2)F_N−3mg=3m·vF²/R → F_N=3mg(1+(v₀²+4gR)/R)。", "note": "浙江力学计算高频'圆弧管道+机械能守恒+圆周受力'，注意管道内外侧支持力方向差异。"}, "pit": ["守恒条件错记成只受重力：应是只有重力或弹力做功，可受其他力只要不做功", "动能定理 W合=ΔEk 的 W 含所有力做功，易漏某个力", "重力势能正负由零势能面定，易忽略符号"], "con": ["机械能守恒 vs 能量守恒：后者普适，前者是特例(无摩擦/非保守力不做功)", "动能定理 vs 机械能守恒：多过程优先动能定理，分段且守恒才用机械能"], "tip": "功是能量转化量，动能定理一步上。守恒先判条件(只有重力弹力做)，多过程用定理最稳当。势能零点自己选，符号带上别丢三。", "demo": "orbit"}, {"name": "动量守恒定律", "sub": ["动量、冲量", "动量定理", "动量守恒条件", "碰撞分类", "反冲与火箭"], "exam": {"src": "2024年1月·浙江选考（压轴节选）", "tag": "动量定理·冲量", "q": "弹簧平台振动模型中，已知 t1、t2 时刻弹簧弹性势能均等于动能，由动量与动能关系及动量定理求弹簧弹力冲量大小。", "a": "由 Ek=p²/2m 得动量 p=√(2mEk)；弹力冲量 I=Δp（取两时刻动量差）。", "note": "近年浙江压轴频繁将'动量定理'与'电磁感应/振动'综合，冲量=I=Δp 是核心抓手。"}, "pit": ["守恒条件系统合外力为零≠系统不受力", "冲量 I=Ft 中 F 为合外力(或平均力)；变力冲量要用积分/图像面积", "动量定理 I=Δp 是矢量，方向易错"], "con": ["动量守恒 vs 机械能守恒：碰撞中动量常守恒，机械能不一定(非弹性碰撞损失)", "动量定理(矢量) vs 动能定理(标量)"], "tip": "动量守恒看系统，合外力零才成立。碰撞爆炸反冲都可，矢量运算别大意。I=Δp 是冲量定理，洛力变要积分面积。", "demo": "energy"}]}, {"name": "电磁学", "color": "#db2777", "en": "Electromagnetism", "points": [{"name": "静电场", "sub": ["库仑定律", "电场强度与电场线", "电势、电势能", "电势差与等势面", "电容器", "带电粒子在电场中运动"], "exam": {"src": "2023年1月·浙江选考", "tag": "电场线·等势面·电势", "q": "如图所示是某一带电导体周围的电场线与等势面，A、C是同一等势面上的两点，B是另一等势面上的一点。下列说法正确的是（ ）  A.导体内部场强左端大于右端  B.A、C两点电势均低于B点  C.B点电场强度大于A点  D.正电荷从A沿虚线移到B电场力做正功、电势能减小", "a": "CD。等势面上电势相等且沿电场线降低→A、C等势且高于B（B错）；电场线密处场强大→B处比A处密（C对）；正电荷从高电势A移到低电势B，电场力做正功、电势能减小（D对）。", "note": "浙江选考'电场线+等势面'读图题年年有，核心三句话：沿电场线电势降、等势面垂直电场线、电势能=qφ。"}, "pit": ["电势沿电场线降低，但场强大小看疏密；常把电势为零当成场强为零", "电势能 Ep=qφ，q 正负决定增减，易符号错", "电场强度大≠电势高"], "con": ["电场强度 E(矢量，E=F/q) vs 电势 φ(标量，φ=Ep/q) vs 电势能 Ep(qφ)", "场强与电势无正比关系：场强大处电势可高可低"], "tip": "场强看疏密带方向，电势沿电场降。电势能 qφ 来算、正负都要想。等势面垂直电场线，沿面走电势不变。", "demo": "efield"}, {"name": "恒定电流", "sub": ["电流与电阻", "欧姆定律", "串并联电路", "电功率与效率", "闭合电路欧姆定律"], "exam": {"src": "2023年1月·浙江选考（实验背景）", "tag": "闭合电路·U-I 图像", "q": "测金属丝电阻实验中，由 U-I 图像求电阻；并将满偏电流 Ig 的表头 G 改装为量程 I 的电流表，求并联电阻。", "a": "R=ΔU/ΔI（图像斜率）；改装电流表并联 R=Ig·Rg/(I-Ig)。", "note": "'闭合电路+图像'是浙江电学实验与选择题的交汇点，U-I 斜率即电阻/内阻。"}, "pit": ["内外接选反：应大电阻内接、小电阻外接，常记成大内小外却用反", "U-I 图斜率：测电阻是 R，测电源内阻才是 r，混用", "改装表：电流表并联分流、电压表串联分压，接法错"], "con": ["电动势 E(电源属性，不变) vs 路端电压 U(随外阻变，U=E−Ir)", "串联分压 vs 并联分流：电压分配看串联、电流分配看并联"], "tip": "大内小外记分明：大电阻(Rx>√RARV)用内接、小电阻用外接。U-I 斜率是电阻(测电源则是内阻 r)。电功率三式 P=UI=I²R=U²/R 看已知选。", "demo": "circuit"}, {"name": "磁场", "sub": ["磁感应强度", "安培力", "洛伦兹力", "带电粒子在磁场中运动", "组合场与叠加场"], "exam": {"src": "2024年6月·浙江选考", "tag": "洛伦兹力·冲量", "q": "带电小球套在固定光滑绝缘斜杆上，处于垂直杆面的匀强磁场中，以 v0 上滑至最高点。判断合力冲量、重力冲量、洛伦兹力冲量及弹力冲量是否为零。", "a": "洛伦兹力 F=qvB 随时间线性变化，冲量 I=∫Fdt=½qB·v0·t；若 v0=0 时洛力=mg 分量则弹力冲量为零。选 CD。", "note": "浙江磁场题常在'洛伦兹力随时间变化'上设陷阱，冲量要用积分/图像面积而非 F·t 直接代。"}, "pit": ["左手定则三向关系错：磁感线穿手心、四指电流(正电荷运动方向)、拇指受力", "忘洛伦兹力永不做功，只改方向不改速率", "圆周 r=mv/qB、周期 T=2πm/qB(与 v、r 无关)，易误带 r"], "con": ["安培力(通电导线，F=BILsinθ) vs 洛伦兹力(运动电荷，f=qvBsinθ)", "左手定则(受力) vs 右手定则(发电/感应电流)"], "tip": "左手力、右手电：受力左手掌，磁线穿手心，四指电流向、拇指是力向。洛力不做功，只改方向不改成。r=mv/qB，T 与速度无干。", "demo": "lorentz"}, {"name": "电磁感应", "sub": ["磁通量", "法拉第电磁感应定律", "楞次定律（阻碍）", "导体棒切割磁感线", "自感与互感"], "exam": {"src": "2024年1月·浙江选考（压轴）", "tag": "电磁感应综合", "q": "弹簧平台上固定三个线圈，磁场随时间变化使线圈产生感应电流。求：(1)平台静止时弹簧伸长量；(2)t1 时每个线圈安培力大小；(3)t1~t2 内每个线圈焦耳热 Q；(4)该时段弹簧弹力冲量。", "a": "(1)平衡+胡克定律；(2)E=nΔΦ/Δt→I→F=BIL；(3)能量守恒减小的机械能转为焦耳热；(4)由动量定理 I弹=Δp。", "note": "浙江压轴高频综合：'电磁感应+能量守恒+动量定理'，四问层层递进，是区分度核心。"}, "pit": ["楞次定律阻碍误读为阻止：是阻止变化、不是抵消", "E=nΔΦ/Δt 是变化率非变化量，常把 ΔΦ 当 E", "切割 E=BLv 中 L 为有效切割长度、v 取垂直分量，易代全长/全速"], "con": ["磁通量 Φ vs 磁通量变化 ΔΦ(前者状态、后者变化)", "右手定则(切割生电) vs 楞次定律(一般感应)"], "tip": "楞次八字：增反减同、来拒去留。E=nΔΦ/Δt 看变化率，切割用 BLv(垂直分量最要紧)。动生右手、感生楞次，方向判定两把刀。", "demo": "induction"}, {"name": "交变电流", "sub": ["正弦交流电描述", "有效值与峰值", "理想变压器", "远距离输电"], "exam": {"src": "2024年1月·浙江选考", "tag": "变压器·升压·匝数比", "q": "燃气灶点火装置原理图：直流电经转换器输出交流电，经原、副线圈匝数分别为 n₁、n₂ 的变压器升压至峰值大于某值即引发电火花。下列正确的是（ ）  A.n₂<n₁  B.n₂>n₁  C.电压表测原线圈示数为峰值  D.副线圈输出交流电压的频率是 2f", "a": "B。点火需升压→n₂>n₁（A错）；电压表测有效值（C错）；变压器不改变频率，副线圈频率=f（D错）。", "note": "浙江对'变压器比例+有效值+频率不变'的考查极稳，牢记 U₁/U₂=n₁/n₂、P入=P出、f 不变。"}, "pit": ["有效值是热效应等效，正弦 I有效=Im/√2；常用峰值代有效值算功率", "变压器：电压比=匝数比，但电流比仅理想成立；功率守恒定电流", "远距离输电 P损=I²R，忘升压为降电流"], "con": ["四值：瞬时 i=Im sinωt、峰值 Im、有效 I(热效应)、平均 E(磁通变化率)", "变压器原副线圈电压比=匝数比恒定，电流比由功率守恒定"], "tip": "四值分清用对场：功率热量用有效、击穿耐压看峰值、平均只算磁通变。变压器功率守恒是根本，U 比匝、I 反比。", "demo": "acwave"}, {"name": "电磁波", "sub": ["电磁波的产生", "电磁波谱（无线电→γ）", "发射与接收（调制/检波）", "电磁波的性质"], "exam": {"src": "2026年1月·浙江选考", "tag": "电磁波谱·单位", "q": "第六代移动通信(6G)部分使用太赫兹(THz)波段。单位 THz 对应的物理量是（ ）  A.能量  B.功率  C.频率  D.波长", "a": "C。Hz（赫兹）是频率单位，THz 为其倍数单位。", "note": "浙江偏好'科技前沿+基础概念'组合，电磁波谱顺序与各单位含义是常考微点。"}, "pit": ["电磁波谱频率顺序记反：应为 无线电<红外<可见<紫外<X<γ(波长倒序)", "忘电磁波是横波、传播不需介质", "调制(发射端) vs 解调(接收端)混"], "con": ["电磁波(横波、不需介质) vs 机械波(需介质)", "波从一种介质入另一种：频率 f 不变，v、λ 变"], "tip": "波谱频率往上升：无线电红紫 Xγ。过界不变是频率，vλ 会变要分清。调制发射检波收，横波传播不需媒。", "demo": "emwave"}]}, {"name": "热学", "color": "#ea580c", "en": "Thermal", "points": [{"name": "分子动理论", "sub": ["阿伏伽德罗常数应用", "布朗运动", "分子间作用力与分子势能", "内能"], "exam": {"src": "2026年1月·浙江选考（实验）", "tag": "油膜法·分子直径估算", "q": "在'油膜法估测油酸分子的大小'实验中：(1)以下说法正确的是（ ）  A.图示油膜形状由于撒粉太少  B.按图示油膜面积计算，测得油酸分子直径偏大  C.油酸酒精溶液放置长时间后使用，测得油酸分子直径偏大  (2)测得一滴油酸酒精溶液所含纯油酸体积为 V，数出轮廓整格 n 个、多于半格 m 个，每格面积 S，则分子直径 d=___。", "a": "(1)C（久置后酒精挥发，同体积溶液含纯油酸偏多→测得直径偏大）；(2)d=V/[(n+m)S]。", "note": "浙江热学实验高频：油膜法'浓度配制→面积估算→直径计算'，注意'多于半格算一个'的计数规则。"}, "pit": ["布朗运动是液体分子撞击悬浮颗粒所致，不是分子本身的运动", "忘 r=r0 时引力=斥力、分子力合力为零(势能最小)", "油膜法 d=V/S 前提是单分子层、纯油酸"], "con": ["布朗运动(悬浮微粒) vs 分子热运动(分子本身)", "分子势能在 r=r0 处最小(非 r→0 最小)"], "tip": "布朗看颗粒，分子撞它才动。r0 处力为零，过近斥过远引。油膜 d=V/S，单分子层做桥梁。", "demo": "brown"}, {"name": "气体实验定律", "sub": ["玻意耳定律(pV=C)", "查理定律(p/T=C)", "盖·吕萨克定律(V/T=C)", "理想气体状态方程", "p-V/T 图像"], "exam": {"src": "2023年1月·浙江选考", "tag": "气体实验定律", "q": "圆柱形容器内用活塞密封一定质量理想气体，A→B 活塞缓慢上升（压强不变），B→C 体积不变被加热至触动报警器。已知 TA、ΔU。求：(1)B 的温度；(2)C 的压强；(3)A→C 吸热量 Q。", "a": "(1)等压 V∝T→TB=TA·VB/VA；(2)等容 p∝T→pc=pA·TC/TA；(3)Q=ΔU+W，W=pΔV。", "note": "浙江热学计算必考'状态参量+图像'，先定型（等压/等容/等温）再代定律。"}, "pit": ["温度用开尔文 K=T+273，常代摄氏度进公式", "pV/T=C 中 p、V、T 必须同一状态同时代入", "图像斜率含义混淆(p-V 双曲、p-T 过原点直线)"], "con": ["玻意耳(等温 pV=C) vs 查理(等容 p/T=C) vs 盖吕萨克(等压 V/T=C)", "p-V 图面积=气体做功"], "tip": "气体三律记前提：等温玻意耳 pV 定、等容查理 p/T、等压盖吕萨克 V/T。先判过程再代公式，T 永远用开尔文。", "demo": "gaslaw"}, {"name": "热力学定律", "sub": ["热力学第一定律 ΔU=Q+W", "能量守恒表述", "热力学第二定律", "永动机不可能"], "exam": {"src": "2023年1月·浙江选考（同上题第3问）", "tag": "热力学第一定律", "q": "上题中气体从状态 A 到 C 内能增加 ΔU，求从外界吸收的热量 Q。", "a": "由 ΔU=Q-W（W 为气体对外做功=pΔV），得 Q=ΔU+W。", "note": "符号规则是失分高发区：'气体对外做功 W 取正'，或统一用 ΔU=Q+W（W 为外界对气体做功）。"}, "pit": ["ΔU=Q+W 中 W 为外界对气体做功，与气体对外做功正负相反，易混", "Q、W 符号规则不统一，结果正负错", "第二类永动机不违反能量守恒，但违反方向性(第二定律)"], "con": ["热力学第一定律(能量守恒) vs 第二定律(过程方向性/不可逆)", "不能从单一热源吸热全变功而不引起其他变化"], "tip": "第一定律守恒式：ΔU=Q+W(W 是外界对气体做)。气体对外做正功则 W 取负要小心。第二定律管方向，热不能全变功不惹事。", "demo": "thermo"}]}, {"name": "光学", "color": "#16a34a", "en": "Optics", "points": [{"name": "几何光学", "sub": ["折射定律 n₁sinθ₁=n₂sinθ₂", "全反射与临界角", "色散", "透镜成像公式"], "exam": {"src": "2024年6月·浙江选考", "tag": "全反射", "q": "水流导光实验：出水口受激光照射，下方桶中水被照亮。下列说法正确的是（ ）  A.激光在水、空气中速度相同  B.激光在水流中有全反射现象  C.水在空中做匀速率曲线运动  D.水在水平方向做匀加速运动", "a": "B。水流中光多次全反射使桶中水被照亮；水在空中做平抛（匀变速）。", "note": "浙江常以'水流导光/光导纤维'考全反射条件，记住 n水>n空气 方能发生全反射。"}, "pit": ["折射率 n=c/v，n 大则 v 小；常误 n 大速度大", "全反射条件漏光密→光疏或漏入射角≥临界角", "临界角 sinC=1/n，易代成 n 或 1/n 错"], "con": ["折射(n₁sinθ₁=n₂sinθ₂) vs 全反射(特殊折射，只在光密→光疏)", "色散：n紫>n红，紫光偏折大、速度小、波长短"], "tip": "光密到光疏才全反，入射角大过临界角(sinC=1/n)。n 大 v 小偏折大，紫光折射最凶它。折射定律 n₁sinθ₁=n₂sinθ₂。", "demo": "refraction"}, {"name": "物理光学", "sub": ["双缝干涉与条纹间距", "薄膜干涉", "单缝衍射", "偏振", "光的本性"], "exam": {"src": "2021年6月·浙江选考", "tag": "双缝干涉·条纹间距调控", "q": "'用双缝干涉测量光的波长'实验：①观察到较模糊的干涉条纹，要使条纹变得清晰，值得尝试的是（ ）  A.旋转测量头  B.增大单缝与双缝间的距离  C.调节拨杆使单缝与双缝平行  ②要增大观察到的条纹间距，正确的做法是（ ）  A.减小单缝与光源间的距离  B.减小单缝与双缝间的距离  C.增大透镜与单缝间的距离  D.增大双缝与测量头间的距离", "a": "①C（单缝与双缝不平行则无清晰干涉条纹，调拨杆使二者平行）；②D（Δx=Lλ/d，增大双缝到屏的距离 L 可增大间距）。", "note": "浙江光学实验必考'双缝干涉'操作细节：平行是关键，Δx 与 L 正比、与 d 反比。"}, "pit": ["双缝干涉 Δx=Lλ/d，忘 λ 大则条纹宽(常反以为蓝宽)", "干涉(两束相干光叠加)与衍射(波绕过障碍)混淆", "偏振证明光是横波，常忘此结论"], "con": ["干涉(等间距明暗相间) vs 衍射(中央宽、两侧窄)", "增透膜厚度 λ/4(膜中波长)"], "tip": "干涉 Δx=Lλ/d，波长长则条纹宽；红光宽于蓝。干涉等间距、衍射中央胖。偏振证横波，光是横波没商量。", "demo": "interference"}]}, {"name": "原子物理与近代物理", "color": "#7c3aed", "en": "Atomic & Modern", "points": [{"name": "原子结构（玻尔模型）", "sub": ["电子的发现", "α粒子散射实验", "玻尔三假设", "能级跃迁与光谱", "氢原子能级图"], "exam": {"src": "2023年1月·浙江选考", "tag": "能级跃迁·干涉·光电效应综合", "q": "氢原子从能级6跃迁到能级2产生可见光Ⅰ，从能级3跃迁到能级2产生可见光Ⅱ。用同一双缝干涉装置研究两种光得到干涉条纹，两种光分别照射光电管都能产生光电效应。下列说法正确的是（ ）  A.图1中的 Hα 对应的是Ⅰ  B.图2中的干涉条纹对应的是Ⅱ  C.Ⅰ的光子动量大于Ⅱ的光子动量  D.P向a移动，电流表示数为零时Ⅰ对应的电压表示数比Ⅱ的大", "a": "CD。6→2能级差大于3→2→Ⅰ能量更高、频率更高、波长短、光子动量 p=h/λ 更大（C对）；频率越大遏止电压越大（D对）；Ⅱ(3→2)能量小、波长长、条纹更宽，故图2宽条纹对应Ⅱ（B错）；偏红光能量低对应Ⅱ（A错）。", "note": "浙江原子物理压轴常把'能级跃迁+干涉条纹+光电效应'三合一，抓住'能级差决定能量、能量决定波长与频率'主线。"}, "pit": ["跃迁种数算错：应为 C(n,2)=n(n−1)/2，非 n−1", "能级 En=E1/n²(E1=−13.6eV)，n 大则能级高(代数大、绝对值小)，易误 n 大能量小", "吸收光子须恰好等于能级差，否则不吸收"], "con": ["α粒子散射(核式结构) vs 氢原子光谱(玻尔量子化模型)", "能级高指能量高(n 大)，非离核近"], "tip": "玻尔三假设：定态、跃迁 hν=ΔE、量子化。跃迁种数 C(n,2)。能级 En=E1/n²，吸收发射能量差。α散射见核小，光谱证量子。", "demo": "atom"}, {"name": "原子核", "sub": ["天然放射现象", "α/β/γ 衰变", "核反应方程守恒", "质量亏损与质能方程", "裂变与聚变"], "exam": {"src": "2024年6月·浙江选考", "tag": "核反应方程", "q": "发现中子的核反应：⁴₂He+⁹₄Be→X+¹₀n；“玉兔二号”核电池中²³⁸₉₄Pu→²³⁴₉₂U+Y。正确的是（ ）  A.X 为 ¹²₆C  B.Y 为 ³₂He  C.中子质量数为零  D.钚238衰变吸收能量", "a": "A。质量数、电荷数守恒得 X=¹²₆C、Y=⁴₂He；衰变释放能量。", "note": "浙江必考'两守恒写核反应'+'衰变类型判断'，背熟 α(⁴₂He)、β(⁰₋₁e)、中子(¹₀n)。"}, "pit": ["写核反应忘质量数、电荷数两守恒，凭感觉配", "β衰变是中子→质子+电子，质量数不变、电荷+1，易与 α 混", "质量亏损 Δm 对应 ΔE=Δmc²，易漏 c²"], "con": ["α衰变(质量数−4、电荷−2) vs β衰变(质量数不变、电荷+1)", "α(⁴₂He)、β(⁰₋₁e)、γ(光子，无质量无电荷)"], "tip": "核反应两守恒：质量数、电荷数。α是⁴₂He、β是⁰₋₁e、γ光子无质量。衰变类型看变化：α减4减2、β加1不变。质能方程 ΔE=Δmc²。", "demo": "decay"}, {"name": "波粒二象性", "sub": ["光电效应与爱因斯坦方程", "光子能量 E=hν", "德布罗意物质波", "物质波实验"], "exam": {"src": "2026年1月·浙江选考（压轴节选）", "tag": "德布罗意波·光电效应", "q": "用动能 Ek 的电子束轰击样品激发俄歇过程。求：(1)入射电子的德布罗意波长 λ；(2)射出的 X 光子波长（已知能级差 ΔΕ）。", "a": "(1)λ=h/p，p=√(2mEk)；(2)λ光=hc/ΔE。", "note": "近代物理压轴近年升级为'原子物理+德布罗意+磁场测动能'综合，λ=h/p 与 E=hc/λ 是两根支柱。"}, "pit": ["光电效应：入射光频率须>极限频率才出电子；光强只影响光电流大小，不影响初动能", "忘 Ek=hν−W0(W0 是逸出功)", "德布罗意 λ=h/p，p 为动量，易与光子 E=hν 混"], "con": ["光子能量 E=hν vs 物质波 λ=h/p", "光电效应(光子打电子逸出) vs 康普顿效应(光子撞电子散射)"], "tip": "光电效应记要点：频率过限才出电子，光强定多不少、初动能只随频率涨。Ek=hν−W0。物质波 λ=h/p，微观粒子都波动。", "demo": "photoelectric"}, {"name": "相对论简介", "sub": ["狭义相对论前提（光速不变/相对性）", "时间膨胀", "长度收缩", "质能关系 E=mc²"], "exam": {"src": "2024年·浙江选考", "tag": "相对论·光速不变原理", "q": "下列说法正确的是（ ）  A.中子整体呈电中性但内部有复杂结构  B.真空中的光速在不同的惯性参考系中大小都相同  C.增加接收电路的线圈匝数，可接收更高频率的电台信号  D.分子间作用力从斥力变为引力的过程中，分子势能先增加后减少", "a": "AB。光速不变原理：真空中光速在所有惯性系相同（B对）；中子由夸克组成、内部有结构（A对）；增加线圈匝数减小固有频率→接收更低频（C错）；r<r₀时斥力、r>r₀时引力，从斥变引过程分子势能先减后增（D错）。", "note": "浙江对相对论与近代物理多为'概念正误判断'，掌握两条基本原理（相对性+光速不变）与三个效应即可。"}, "pit": ["光速不变原理：真空中 c 与参考系无关，常误以为相对速度叠加", "钟慢、尺缩是测量效应，非视觉错觉；且只在运动方向尺缩", "质速关系 m=m0/√(1−v²/c²)，v→c 时质量→∞"], "con": ["相对性原理(物理规律相同) vs 光速不变(光速恒定)", "看到的视觉像 vs 真实测量的尺缩钟慢"], "tip": "相对论两基石：相对性原理 + 光速不变。钟慢尺缩质增效应，都因 √(1−v²/c²)。速度越大越明显，c 是极限不可越。", "demo": "relativity"}]}, {"name": "实验探究", "color": "#0891b2", "en": "Experiments", "points": [{"name": "力学实验", "sub": ["探究 a 与 F、m 的关系（控制变量）", "验证机械能守恒", "探究动量守恒", "纸带数据处理（vₙ、a）"], "exam": {"src": "2024年1月·浙江选考", "tag": "探究加速度与力、质量", "q": "“探究加速度与力、质量的关系”实验：(1)研究方法___（控制变量法）；(2)正确操作___（先通电后放车、细绳平行）；(3)小车质量___（远大于）槽码质量时拉力≈槽码重力，该误差为___（系统误差）；(4)由纸带写 v₅、a 表达式。", "a": "(1)B 控制变量；(2)B；(3)远大于、系统误差、C(力传感器)；(4)v₅=(x₆−x₄)/2T，a=(x₄+x₅+x₆−x₁−x₂−x₃)/(9T²)。", "note": "力学实验三大件：控制变量、纸带公式、误差分类（偶然/系统），浙江年年轮换考。"}, "pit": ["纸带 vₙ=(xₙ+xₙ₊₁)/2T、a 用逐差法 a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²，常代错", "忘先通电后放车、细绳与木板平行", "小车质量未远大于槽码质量，a 偏小、拉力≠槽码重力"], "con": ["逐差法(充分利用数据减误差) vs 单段差分", "系统误差(可预见、可减小) vs 偶然误差(随机)"], "tip": "力学实验三板斧：控制变量、纸带公式、误差归类。vₙ 是中间时刻速，a 用逐差最准。先通电后放车，质量远大于槽码。", "demo": "timing"}, {"name": "电学实验", "sub": ["伏安法测电阻（内外接）", "电表改装（扩流/升压）", "测电源电动势与内阻", "多用电表使用", "传感器应用"], "exam": {"src": "2023年1月·浙江选考", "tag": "伏安法·电表改装", "q": "测金属丝电阻：分压式接法，导线 a 接___（0.6A）接线柱，b 接___（外接）；滑片置___（左）端保护；由 U-I 图求 R；将表头 G 改装为大量程电流表需并联电阻 R=___。", "a": "a→0.6A；b→0.6A（外接）；左；R=IgRg/(I−Ig)。", "note": "电学实验是浙江'区分度担当'：分压/限流、内外接、改装三件套必会，且常要求设计电路图。"}, "pit": ["内外接选反：Rx>√RARB 用内接，否则外接(大内小外)", "分压式滑片忘置阻值最小端保护电路", "改装：电流表并联分流电阻、电压表串联分压电阻，接法反"], "con": ["分压式(可从0起调、必用) vs 限流式(节能、简单)", "电流表内接(测大R、偏Rx) vs 外接(测小R、偏Rx小)"], "tip": "电学实验三件套：分压限流、内外接、表改装。大内小外是铁律，分压滑片放最小。电流表并阻扩流、电压表串阻升压。", "demo": "circuit"}, {"name": "热学·光学实验", "sub": ["油膜法估测分子大小", "探究气体定律", "测玻璃折射率", "双缝干涉测波长"], "exam": {"src": "2021年1月·浙江选考（实验）", "tag": "测玻璃折射率·插针法", "q": "小明做'测定玻璃的折射率'实验，发现只有3枚大头针A、B、C插在图示位置，并据此测出了玻璃折射率。请画出光路图，标出入射角 i 和折射角 r，并写出折射率 n 的计算式。", "a": "连接OC得折射光线、AB延长线得入射光线；i 为入射光线与法线夹角，r 为OC与法线夹角；由折射定律 n=sin i/sin r。", "note": "浙江光学实验'插针法测折射率'必考：光路图+入射/折射角标注+ n=sin i/sin r，注意法线垂直界面。"}, "pit": ["油膜法 d=V/S 需单分子层、纯油酸、痱子粉薄而匀，条件忘", "插针法测折射率：入射角不宜过小(误差大)、玻璃砖不能移", "双缝测 λ：Δx=Lλ/d，d 为双缝间距非缝宽"], "con": ["油膜法(测分子直径) vs 卡文迪许扭秤(测 G) vs 双缝(测 λ)", "插针法画光路定 i、r，再算 n=sin i/sin r"], "tip": "热光实验重操作：油膜单分子层 d=V/S，插针画光路 n=sin i/sin r，双缝测波 λ=dΔx/L。步骤排序、表达式书写是考点。", "demo": "interference"}, {"name": "探究性 / 设计性实验", "sub": ["实验方案设计", "误差分析与减小", "创新装置原理", "数据图像处理"], "exam": {"src": "2026年1月·浙江选考（节选）", "tag": "实验方案设计", "q": "测量俄歇电子动能：甲用'电子在磁场中偏转'测（由 y 坐标求 R→动能）；乙设计'用电子在电场中运动'的方案，列出需测物理量并给出动能表达式。", "a": "甲：qvB=mv²/R→Ek=½mv²=q²B²R²/2m；乙：测偏转位移 y、板长 L、电压 U，由类平抛得 Ek=qU·L²/(4y·d) 等（依装置而定）。", "note": "浙江新趋势：从'验证性'转向'设计性'，要求自主选择原理、列测量量、推表达式——是最高阶能力。"}, "pit": ["设计实验先定原理再选器材，常倒过来导致装置错", "误差分析只说有误差不写来源+减小方法", "创新装置读图/读数据能力弱，表达式推不出"], "con": ["验证性实验(已知结论去验证) vs 设计性实验(自主探究原理)", "直接测量 vs 间接测量(通过物理量关系推算)"], "tip": "设计实验四步走：定原理、选器材、列测量量、推表达式。误差要找来源并说减小法。从验证到设计，能力最高阶。", "demo": "design"}]}];
+const DEMO_TRAP = {"vector": "位移是矢量，只由初末位置决定；常把路程当位移大小代入公式（|位移|≤路程）。", "vgraph": "v-t 图：斜率=加速度、图线与 t 轴围成面积=位移；x-t 图面积无意义，勿混用。", "balance": "光滑接触+对称时 Fa=Fb=G/(2cosθ)，θ 越大支持力越大；勿直接平分 G。", "newton2": "a=F/m 中 F 必须是合外力；多力问题先求合力再代牛二，勿漏重力/摩擦力。", "projectile": "平抛：水平匀速、竖直自由落体；落地时间只由高度 h 决定，与初速 v₀ 无关。", "circle": "向心力是效果力，由重力/弹力/摩擦力提供，不是新加的力；绳/杆模型临界条件不同。", "orbit": "高轨低速大周期；变轨到高轨需加速(离心)，并非速度大轨道才高。同步轨道 T=24h、r≈4.2×10⁴km。", "energy": "机械能守恒条件：只有重力或弹力做功；有摩擦则机械能不守恒，用动能定理。", "collision": "弹性碰撞动量、动能均守恒；质量相等两球碰后速度交换。非弹性碰撞机械能有损失。", "efield": "电场线疏密表场强大小，沿电场线电势降低；电势为零处场强未必为零。", "circuit": "U-I 图斜率：测电阻=R、测电源=内阻 r，勿混用。大电阻内接、小电阻外接(大内小外)。", "lorentz": "洛伦兹力永不做功，只改变速度方向；r=mv/qB，周期 T 与速率 v 无关。", "induction": "E=nΔΦ/Δt 看变化率非变化量；切割 E=BLv 中 L 为有效长度、v 取垂直分量。", "acwave": "功率/热量用有效值 I=Im/√2；耐压看峰值；平均电动势只用于算磁通变化。市电 220V/50Hz。", "emwave": "波入异介质：频率 f 不变，v、λ 改变；波谱频率升高方向(无线电→γ)要记牢。", "brown": "布朗运动是悬浮微粒被液体分子撞击的被动运动，不是分子本身的运动。", "gaslaw": "先判定等压/等容/等温过程，再代对应定律；温度 T 必须用开尔文(K)。", "thermo": "ΔU=Q+W 中 W 是外界对气体做的功；气体对外做功时 W 取负，切勿直接套用。", "refraction": "全反射须满足光密→光疏且入射角≥临界角 C=asin(1/n)；n 越大光速越小。", "interference": "Δx=Lλ/d，λ 越大条纹越宽；红光(λ大)条纹宽于蓝光(λ小)，勿反。", "atom": "跃迁种类=C(n,2)；吸收光子须恰好等于能级差，否则不吸收；n 越大能级越高。", "decay": "半衰期与初始量无关；写核反应须质量数、电荷数双守恒。α衰变质量数−4、β衰变电荷+1。", "photoelectric": "入射光频率须超过极限频率 ν₀ 才出电子；光强只影响光电流大小，不改初动能。", "relativity": "光速不变是基准；运动方向长度收缩、时钟变慢、质量增大，都因 γ=1/√(1−v²/c²)。", "timing": "v₅=(x₆−x₄)/2T(中间时刻速度)；a 用逐差法 a=(x₄+x₅+x₆−x₁−x₂−x₃)/9T²。", "design": "设计实验四步走：定原理→选器材→列测量量→推表达式；误差要指出来源与减小方法。"};
+
+function dist(a,b){return Math.hypot(a[0]-b[0],a[1]-b[1]);}
+function mk(tag,props){var e=document.createElement(tag);if(props){for(var k in props){e.setAttribute(k,props[k]);}}return e;}
+function mkcanvas(box,w,h){var c=mk("canvas",{width:w,height:h});c.style.width="100%";c.style.maxWidth=w+"px";c.style.background="#0f172a";c.style.borderRadius="8px";c.style.display="block";c.style.marginBottom="6px";box.appendChild(c);return c;}
+function slider(box,name,min,max,step,init,unit,cb){var lab=mk("label");var nm=document.createElement("span");nm.textContent=name;var inp=mk("input",{type:"range",min:min,max:max,step:step,value:init});inp.style.width="140px";var val=document.createElement("span");val.textContent=init+unit;val.style.fontSize="12px";val.style.color="#0369a1";val.style.fontWeight="700";inp.addEventListener("input",function(){val.textContent=this.value+unit;cb(parseFloat(this.value));});lab.appendChild(nm);lab.appendChild(inp);lab.appendChild(val);box.appendChild(lab);return inp;}
+function readout(box){var d=mk("div",{class:"read"});box.appendChild(d);return d;}
+function arrow(x,x1,y1,x2,y2,col,wd){x.strokeStyle=col;x.fillStyle=col;x.lineWidth=wd||2;var a=Math.atan2(y2-y1,x2-x1);x.beginPath();x.moveTo(x1,y1);x.lineTo(x2,y2);x.stroke();x.beginPath();x.moveTo(x2,y2);x.lineTo(x2-9*Math.cos(a-0.4),y2-9*Math.sin(a-0.4));x.lineTo(x2-9*Math.cos(a+0.4),y2-9*Math.sin(a+0.4));x.closePath();x.fill();}
+var curCancel=null;
+function stop(){if(curCancel){curCancel();curCancel=null;}}
+var DEMOS={};
+DEMOS.vector=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var path=[[60,180],[180,80],[300,160],[420,60]];var t=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#64748b";x.lineWidth=2;x.beginPath();x.moveTo(path[0][0],path[0][1]);for(var i=1;i<path.length;i++)x.lineTo(path[i][0],path[i][1]);x.stroke();
+  var seg=Math.floor(t);var f=t-seg;var px,py;
+  if(seg>=path.length-1){px=path[3][0];py=path[3][1];}
+  else{px=path[seg][0]+(path[seg+1][0]-path[seg][0])*f;py=path[seg][1]+(path[seg+1][1]-path[seg][1])*f;}
+  var s=0;for(var i=0;i<seg;i++)s+=dist(path[i],path[i+1]);s+=dist(path[seg],[px,py]);
+  arrow(x,path[0][0],path[0][1],px,py,"#22d3ee",3);
+  x.fillStyle="#f87171";x.beginPath();x.arc(px,py,5,0,7);x.fill();
+  rd.textContent="位移(矢量)="+dist(path[0],[px,py]).toFixed(0)+" m   路程(标量)="+s.toFixed(0)+" m   → 路程≥|位移|";
+  t+=0.012;if(t>=3)t=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+};
+DEMOS.vgraph=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var v0=5,a=2,t=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var ox=50,oy=200,sx=34,sy=14;
+  x.strokeStyle="#475569";x.lineWidth=1;x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+400,oy);x.lineTo(ox+400,oy-150);x.stroke();
+  x.strokeStyle="#facc15";x.lineWidth=2;x.beginPath();
+  for(var tt=0;tt<=10;tt+=0.1){var vv=v0+a*tt;var px=ox+tt*sx;var py=oy-vv*sy;if(tt==0)x.moveTo(px,py);else x.lineTo(px,py);}
+  x.stroke();
+  if(t>0){x.fillStyle="rgba(250,204,21,0.18)";x.beginPath();x.moveTo(ox,oy);for(var tt=0;tt<=t;tt+=0.1){var vv=v0+a*tt;x.lineTo(ox+tt*sx,oy-vv*sy);}x.lineTo(ox+t*sx,oy);x.closePath();x.fill();}
+  var vcur=v0+a*t;x.fillStyle="#22d3ee";x.beginPath();x.arc(ox+t*sx,oy-vcur*sy,4,0,7);x.fill();
+  var s=v0*t+0.5*a*t*t;
+  rd.textContent="t="+t.toFixed(1)+" s  v="+vcur.toFixed(1)+" m/s  位移(面积)="+s.toFixed(1)+" m  (斜率=加速度,面积=位移)";
+  t+=0.04;if(t>10)t=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"初速度 v₀",0,20,0.5,5," m/s",function(v){v0=v;});
+ slider(box,"加速度 a",-8,8,0.5,2," m/s²",function(v){a=v;});
+};
+DEMOS.balance=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var G=50,th=37;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var cx=240,cy=120;
+  arrow(x,cx,cy,cx,cy+80,"#f87171",3);
+  var a=th*Math.PI/180;var fx=Math.sin(a)*80,fy=-Math.cos(a)*80;var F=G/(2*Math.cos(a));
+  arrow(x,cx,cy,cx-fx,cy+fy,"#34d399",3);
+  arrow(x,cx,cy,cx+fx,cy+fy,"#34d399",3);
+  rd.textContent="G="+G+" N  θ="+th+"°  Fa=Fb=G/(2cosθ)="+(F).toFixed(1)+" N  (θ越大支持力越大)";
+ }
+ draw();
+ slider(box,"重力 G",10,100,5,50," N",function(v){G=v;draw();});
+ slider(box,"夹角 θ",10,80,1,37,"°",function(v){th=v;draw();});
+};
+DEMOS.newton2=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var F=2,m=0.5,pos=40,v=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(20,200);x.lineTo(460,200);x.stroke();
+  x.fillStyle="#38bdf8";x.fillRect(pos,180,40,20);
+  arrow(x,pos+40,190,pos+40+F*10,190,"#f87171",3);
+  rd.textContent="F="+F+" N  m="+m+" kg  a=F/m="+(F/m).toFixed(1)+" m/s²  v="+v.toFixed(1)+" m/s";
+  v+=F/m*0.02;pos+=v*0.5;if(pos>420){pos=40;v=0;}
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"拉力 F",0.5,10,0.5,2," N",function(v){F=v;});
+ slider(box,"质量 m",0.1,5,0.1,0.5," kg",function(v){m=v;});
+};
+DEMOS.projectile=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var v0=15,h=1.25,t=0,g=9.8;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var sc=22;
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(20,20+h*sc);x.lineTo(460,20+h*sc);x.stroke();
+  var px=20+v0*t*sc*0.18;var py=20+(h-0.5*g*t*t)*sc;
+  x.strokeStyle="#facc15";x.lineWidth=2;x.beginPath();
+  for(var tt=0;tt<=t;tt+=0.02){var X=20+v0*tt*sc*0.18;var Y=20+(h-0.5*g*tt*tt)*sc;if(tt==0)x.moveTo(X,Y);else x.lineTo(X,Y);}
+  x.stroke();
+  x.fillStyle="#22d3ee";x.beginPath();x.arc(px,py,5,0,7);x.fill();
+  var T=Math.sqrt(2*h/g);
+  rd.textContent="v₀="+v0+" m/s  h="+h+" m  飞行 t="+t.toFixed(2)+" s  落地 t="+T.toFixed(2)+" s  (落地时间只由 h 决定)";
+  t+=0.02;if(t>T)t=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"初速 v₀",2,30,1,15," m/s",function(v){v0=v;});
+ slider(box,"高度 h",0.5,5,0.25,1.25," m",function(v){h=v;});
+};
+DEMOS.circle=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var v=10,r=20,ang=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var cx=240,cy=120;
+  x.strokeStyle="#475569";x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();
+  var px=cx+r*Math.cos(ang),py=cy+r*Math.sin(ang);
+  x.fillStyle="#38bdf8";x.beginPath();x.arc(px,py,8,0,7);x.fill();
+  arrow(x,px,py,cx,cy,"#f87171",3);
+  rd.textContent="v="+v+" m/s  r="+r+" m  a向=v²/r="+(v*v/r).toFixed(1)+" m/s²  T=2πr/v="+(2*Math.PI*r/v).toFixed(1)+" s  (向心力是效果力)";
+  ang+=v/r*0.05;if(ang>6.28)ang=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"速率 v",1,20,0.5,10," m/s",function(vv){v=vv;});
+ slider(box,"半径 r",5,60,1,20," m",function(vv){r=vv;});
+};
+DEMOS.orbit=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var Re=6371,g=0.0098,GM=g*Re*Re; var r=42164,ang=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var cx=240,cy=120;
+  x.fillStyle="#f59e0b";x.beginPath();x.arc(cx,cy,10,0,7);x.fill();
+  x.fillStyle="#94a3b8";x.font="10px sans-serif";x.fillText("地球",cx-12,cy+4);
+  var Rpx=r/42164*160;
+  x.strokeStyle="#475569";x.beginPath();x.arc(cx,cy,Rpx,0,7);x.stroke();
+  var px=cx+Rpx*Math.cos(ang),py=cy+Rpx*Math.sin(ang);
+  x.fillStyle="#38bdf8";x.beginPath();x.arc(px,py,5,0,7);x.fill();
+  var v=Math.sqrt(GM/r); var T=2*Math.PI*r/v;
+  var Ttxt=T>3600?(T/3600).toFixed(1)+" h":(T/60).toFixed(0)+" min";
+  rd.textContent="r="+r.toFixed(0)+" km  v=√(GM/r)="+v.toFixed(2)+" km/s  T="+Ttxt+"  → 高轨低速大周期";
+  ang+=v/r*0.06;if(ang>6.28)ang=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"轨道半径 r",6771,42164,500,42164," km",function(v){r=v;});
+};
+DEMOS.energy=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var th=1.0,L=1.0,m=1.0,g=9.8,t=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var w=Math.sqrt(g/L);
+  var ang=th*Math.cos(w*t);
+  var py=40+120*Math.cos(ang),px=240+120*Math.sin(ang);
+  x.strokeStyle="#94a3b8";x.beginPath();x.moveTo(240,40);x.lineTo(px,py);x.stroke();
+  x.fillStyle="#38bdf8";x.beginPath();x.arc(px,py,10,0,7);x.fill();
+  var E=m*g*L*(1-Math.cos(th));
+  var hh=L*(1-Math.cos(ang));
+  var Ep=m*g*hh,Ek=E-Ep;
+  var Epb=Ep/E*100,Ekb=Ek/E*100;
+  x.fillStyle="#34d399";x.fillRect(20,210-Epb,16,Epb);
+  x.fillStyle="#facc15";x.fillRect(44,210-Ekb,16,Ekb);
+  rd.textContent="L="+L+" m, m="+m+" kg  E=mgL(1−cosθ)≈"+E.toFixed(2)+" J  势能(绿)↔动能(黄)";
+  t+=0.03;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"摆角幅值 θ",0.3,1.4,0.1,1.0," rad",function(v){th=v;});
+};
+DEMOS.collision=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var m1=0.2,m2=0.2,v1=3,v2=0,x1=60,x2=300,phase=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(20,200);x.lineTo(460,200);x.stroke();
+  var v1a=(m1-m2)/(m1+m2)*v1+2*m2/(m1+m2)*v2;
+  var v2a=2*m1/(m1+m2)*v1+(m2-m1)/(m1+m2)*v2;
+  if(phase==0){x1+=v1*0.5;if(x1>=x2-30){phase=1;}}
+  else{x1+=v1a*0.5;x2+=v2a*0.5;if(x1>440||x2>440){x1=60;x2=300;phase=0;}}
+  x.fillStyle="#38bdf8";x.beginPath();x.arc(x1,190,15,0,7);x.fill();
+  x.fillStyle="#f472b6";x.beginPath();x.arc(x2,190,15,0,7);x.fill();
+  rd.textContent="m1="+m1+" kg m2="+m2+" kg v1="+v1+" m/s → 碰后 v1'="+v1a.toFixed(2)+"  v2'="+v2a.toFixed(2)+"  (动量守恒)";
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"质量 m1",0.05,1,0.05,0.2," kg",function(v){m1=v;});
+ slider(box,"质量 m2",0.05,1,0.05,0.2," kg",function(v){m2=v;});
+ slider(box,"初速 v1",0.5,6,0.5,3," m/s",function(v){v1=v;});
+};
+DEMOS.efield=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var q=1;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var cx=240,cy=120;
+  for(var i=1;i<=4;i++){x.strokeStyle="rgba(56,189,248,"+(0.5/i)+")";x.beginPath();x.arc(cx,cy,i*30,0,7);x.stroke();}
+  x.strokeStyle=q>0?"#f87171":"#34d399";
+  for(var k=0;k<12;k++){var a=k/12*6.283;x.beginPath();x.moveTo(cx,cy);x.lineTo(cx+Math.cos(a)*100,cy+Math.sin(a)*100);x.stroke();}
+  x.fillStyle=q>0?"#f87171":"#34d399";x.beginPath();x.arc(cx,cy,8,0,7);x.fill();
+  rd.textContent="q="+(q>0?"+":"")+q+" nC  "+(q>0?"电场线向外(正电荷)":"电场线向内(负电荷)")+"  沿电场线电势降低";
+ }
+ draw();
+ slider(box,"电荷量 q",-3,3,0.5,1," nC",function(v){q=v;draw();});
+};
+DEMOS.circuit=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var E=1.5,r=0.3,R=5;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var ox=50,oy=200,sx=30,sy=24;
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+380,oy);x.moveTo(ox,oy);x.lineTo(ox,oy-150);x.stroke();
+  x.strokeStyle="#facc15";x.lineWidth=2;x.beginPath();
+  for(var I=0;I<=E/r;I+=0.1){var U=E-I*r;if(U<0)break;var px=ox+I*sx,py=oy-U*sy;if(I==0)x.moveTo(px,py);else x.lineTo(px,py);}
+  x.stroke();
+  var I=E/(R+r),U=E-I*r;
+  x.fillStyle="#22d3ee";x.beginPath();x.arc(ox+I*sx,oy-U*sy,5,0,7);x.fill();
+  rd.textContent="E="+E+" V r="+r+" Ω R="+R+" Ω → I="+I.toFixed(2)+" A  U="+U.toFixed(2)+" V  (U=E−Ir,斜率=内阻)";
+ }
+ draw();
+ slider(box,"电动势 E",0.5,12,0.5,1.5," V",function(v){E=v;draw();});
+ slider(box,"内阻 r",0.1,3,0.1,0.3," Ω",function(v){r=v;draw();});
+ slider(box,"外阻 R",1,20,1,5," Ω",function(v){R=v;draw();});
+};
+DEMOS.lorentz=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var v=2,B=0.5,qm=1,ang=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var cx=240,cy=120;var r=Math.min(160,v/(B*qm)*30);
+  x.strokeStyle="#475569";x.beginPath();x.arc(cx,cy,r,0,7);x.stroke();
+  var px=cx+r*Math.cos(ang),py=cy+r*Math.sin(ang);
+  x.fillStyle="#38bdf8";x.beginPath();x.arc(px,py,7,0,7);x.fill();
+  var tx=-Math.sin(ang),ty=Math.cos(ang);
+  arrow(x,px,py,px+tx*20,py+ty*20,"#facc15",2);
+  arrow(x,px,py,cx,cy,"#f87171",3);
+  rd.textContent="v="+v+"×10⁶ m/s B="+B+" T  r=mv/qB="+(v/(B*qm)*30).toFixed(0)+" px  (洛力不做功)";
+  ang+=0.05;if(ang>6.28)ang=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"速率 v",0.5,5,0.5,2,"×10⁶m/s",function(vv){v=vv;});
+ slider(box,"磁场 B",0.1,2,0.1,0.5," T",function(vv){B=vv;});
+ slider(box,"荷质比 q/m",0.2,3,0.2,1,"",function(vv){qm=vv;});
+};
+DEMOS.induction=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var v=2,B=0.5,L=0.2,R=1;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#94a3b8";x.beginPath();x.moveTo(60,80);x.lineTo(420,80);x.moveTo(60,160);x.lineTo(420,160);x.stroke();
+  x.strokeStyle="#38bdf8";x.lineWidth=4;x.beginPath();x.moveTo(120,80);x.lineTo(120,160);x.stroke();
+  var E=B*L*v,I=E/R,F=B*L*I;
+  arrow(x,120,120,120,95,"#facc15",2);
+  arrow(x,120,120,95,120,"#f87171",3);
+  rd.textContent="v="+v+" m/s B="+B+" T L="+L+" m → E=BLv="+(E*1000).toFixed(0)+" mV  I="+I.toFixed(2)+" A  F安="+(F*1000).toFixed(0)+" mN";
+ }
+ draw();
+ slider(box,"速度 v",0,5,0.1,2," m/s",function(vv){v=vv;draw();});
+ slider(box,"磁场 B",0.1,2,0.1,0.5," T",function(vv){B=vv;draw();});
+ slider(box,"棒长 L",0.05,0.5,0.05,0.2," m",function(vv){L=vv;draw();});
+};
+DEMOS.acwave=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var Im=311,f=50,ph=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var ox=40,oy=120;
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+400,oy);x.stroke();
+  var amp=Im/350*70;
+  x.strokeStyle="#facc15";x.lineWidth=2;x.beginPath();
+  for(var tt=0;tt<=400;tt++){var yy=oy-amp*Math.sin(ph+tt*(2*Math.PI*f/8000));if(tt==0)x.moveTo(ox+tt,yy);else x.lineTo(ox+tt,yy);}
+  x.stroke();
+  rd.textContent="市电：f="+f+" Hz, 峰值 Im="+Im+" V  有效值 I=Im/√2="+(Im/Math.SQRT2).toFixed(0)+" V";
+  ph+=0.03;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"峰值 Im",100,400,10,311," V",function(v){Im=v;});
+ slider(box,"频率 f",10,60,1,50," Hz",function(v){f=v;});
+};
+DEMOS.emwave=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var f=5,ph=0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var oy=120;
+  x.strokeStyle="#f87171";x.lineWidth=2;x.beginPath();
+  for(var i=0;i<400;i++){var y=oy-30*Math.sin((i/400)*2*Math.PI*f+ph);if(i==0)x.moveTo(40+i,y);else x.lineTo(40+i,y);}
+  x.stroke();
+  x.strokeStyle="#34d399";x.lineWidth=2;x.beginPath();
+  for(var i=0;i<400;i++){var y=oy+30*Math.sin((i/400)*2*Math.PI*f+ph);if(i==0)x.moveTo(40+i,y);else x.lineTo(40+i,y);}
+  x.stroke();
+  var lam=3000/f;
+  rd.textContent="电磁波 E(红)⊥B(绿) 横波  f="+f+"×10¹⁴ Hz → λ=c/f="+(lam).toFixed(0)+" nm ("+(lam>700?"红外":lam<400?"紫外":"可见光")+")";
+  ph-=0.05;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"频率 f",0.5,7,0.5,5,"×10¹⁴Hz",function(v){f=v;});
+};
+DEMOS.brown=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var T=300,pos=[240,120],trail=[];
+ function draw(){
+  x.clearRect(0,0,480,240);
+  pos[0]+=(Math.random()-0.5)*T/50*6;pos[1]+=(Math.random()-0.5)*T/50*6;
+  pos[0]=Math.max(20,Math.min(460,pos[0]));pos[1]=Math.max(20,Math.min(220,pos[1]));
+  trail.push([pos[0],pos[1]]);if(trail.length>60)trail.shift();
+  x.strokeStyle="rgba(56,189,248,0.5)";x.beginPath();trail.forEach(function(p,i){if(i==0)x.moveTo(p[0],p[1]);else x.lineTo(p[0],p[1]);});x.stroke();
+  x.fillStyle="#f87171";x.beginPath();x.arc(pos[0],pos[1],5,0,7);x.fill();
+  rd.textContent="布朗运动：液体分子撞击悬浮微粒  T="+T+" K ("+(T-273)+"°C) → 温度越高运动越剧烈";
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"温度 T",273,373,5,300," K",function(v){T=v;});
+};
+DEMOS.gaslaw=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var V=22.4,p=1.0;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var ox=50,oy=200,sx=12,sy=17;
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+380,oy);x.moveTo(ox,oy);x.lineTo(ox,oy-150);x.stroke();
+  x.strokeStyle="rgba(250,204,21,0.4)";x.beginPath();
+  for(var v=5;v<=40;v+=0.5){var pp=22.4/v;var px=ox+v*sx,py=oy-pp*sy;if(v==5)x.moveTo(px,py);else x.lineTo(px,py);}
+  x.stroke();
+  x.fillStyle="#22d3ee";x.beginPath();x.arc(ox+V*sx,oy-(22.4/V)*sy,5,0,7);x.fill();
+  var T=p*V*12.0;
+  rd.textContent="标准状况:p=1.01×10⁵Pa,V=22.4L,T=273K  当前 T≈pV/nR="+(T).toFixed(0)+" K  (先判过程再代定律)";
+ }
+ draw();
+ slider(box,"体积 V",5,40,0.5,22.4," L",function(v){V=v;draw();});
+ slider(box,"压强 p",0.5,5,0.1,1.0,"×10⁵Pa",function(v){p=v;draw();});
+};
+DEMOS.thermo=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var Q=500,W=200;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#94a3b8";x.strokeRect(180,90,120,60);
+  x.fillStyle="#e2e8f0";x.font="12px sans-serif";x.fillText("气体",218,125);
+  arrow(x,120,120,180,120,"#34d399",3);
+  arrow(x,120,150,180,150,"#38bdf8",3);
+  arrow(x,300,120,360,120,"#facc15",3);
+  x.fillStyle="#e2e8f0";x.font="11px sans-serif";
+  x.fillText("Q="+Q+" J",95,112);x.fillText("W="+W+" J",95,142);x.fillText("ΔU="+(Q+W).toFixed(0)+" J",330,112);
+  rd.textContent="ΔU=Q+W  ("+Q+"+"+W+"="+(Q+W).toFixed(0)+" J)  气体对外做功时 W 取负";
+ }
+ draw();
+ slider(box,"吸热 Q",0,1000,10,500," J",function(v){Q=v;draw();});
+ slider(box,"外界对气体做功 W",-500,500,10,200," J",function(v){W=v;draw();});
+};
+DEMOS.refraction=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var i=30,n=1.5;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var ox=240,oy=120;
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(20,oy);x.lineTo(460,oy);x.stroke();
+  var a=i*Math.PI/180;
+  x.strokeStyle="#facc15";x.lineWidth=2;x.beginPath();x.moveTo(ox-Math.sin(a)*90,oy-Math.cos(a)*90);x.lineTo(ox,oy);x.stroke();
+  var C=Math.asin(1/n);
+  if(a<C){var r=Math.asin(Math.sin(a)/n);x.strokeStyle="#38bdf8";x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+Math.sin(r)*90,oy+Math.cos(r)*90);x.stroke();rd.textContent="i="+i+"° n="+n+"  r=asin(sin i/n)="+(r*180/Math.PI).toFixed(1)+"°  (玻璃 n≈1.5, 水 n≈1.33)";}
+  else{x.strokeStyle="#f87171";x.beginPath();x.moveTo(ox,oy);x.lineTo(ox+Math.sin(a)*90,oy-Math.cos(a)*90);x.stroke();rd.textContent="i="+i+"° > 临界角 C=asin(1/n)="+(C*180/Math.PI).toFixed(1)+"° → 全反射!";}
+ }
+ draw();
+ slider(box,"入射角 i",5,85,1,30,"°",function(v){i=v;draw();});
+ slider(box,"折射率 n",1.1,2.5,0.1,1.5,"",function(v){n=v;draw();});
+};
+DEMOS.interference=function(box){
+ var c=mkcanvas(box,480,140);var x=c.getContext("2d");var rd=readout(box);
+ var lam=550,d=0.5,L=1.0;
+ function draw(){
+  x.clearRect(0,0,480,140);
+  var dx_mm=L*lam*1e-3/d; var dx_px=dx_mm*45;
+  for(var yy=0;yy<140;yy+=4){var ph=yy/dx_px*Math.PI*2;var I=Math.cos(ph/2);var b=120+135*Math.abs(I);x.fillStyle="rgb("+b+","+b+","+b+")";x.fillRect(0,yy,480,4);}
+  rd.textContent="Δx=Lλ/d = "+L+"×"+lam+"nm/"+d+"mm = "+(dx_mm).toFixed(2)+" mm  (λ大→条纹宽, 红光宽于蓝光)";
+ }
+ draw();
+ slider(box,"波长 λ",400,700,10,550," nm",function(v){lam=v;draw();});
+ slider(box,"缝距 d",0.1,1,0.05,0.5," mm",function(v){d=v;draw();});
+ slider(box,"屏距 L",0.5,2,0.1,1.0," m",function(v){L=v;draw();});
+};
+DEMOS.atom=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var n1=3,n2=1;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var E1=-13.6;
+  for(var n=1;n<=5;n++){var E=E1/(n*n);var yy=40+(n-1)*38;x.strokeStyle="#475569";x.beginPath();x.moveTo(120,yy);x.lineTo(360,yy);x.stroke();x.fillStyle="#e2e8f0";x.font="11px sans-serif";x.fillText("n="+n+"  E="+E.toFixed(1)+" eV",295,yy-4);}
+  var y1=40+(n1-1)*38,y2=40+(n2-1)*38;
+  x.strokeStyle="#facc15";x.lineWidth=3;x.beginPath();x.moveTo(240,y1);x.lineTo(240,y2);x.stroke();
+  var Ea=E1/(n1*n1),Eb=E1/(n2*n2);
+  rd.textContent="n="+n1+"→"+n2+"  光子 hν=ΔE="+(Ea-Eb).toFixed(1)+" eV  "+((Ea-Eb)>0?"发射":"吸收")+"光子";
+ }
+ draw();
+ slider(box,"初态 n1",2,5,1,3,"",function(v){n1=v;if(n2>=n1)n2=n1-1;draw();});
+ slider(box,"末态 n2",1,4,1,1,"",function(v){n2=v;draw();});
+};
+DEMOS.decay=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var t=0,N0=100,lam=1.21e-4;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(40,200);x.lineTo(440,200);x.stroke();
+  x.strokeStyle="#34d399";x.lineWidth=2;x.beginPath();
+  for(var tt=0;tt<=t;tt+=200){var N=N0*Math.exp(-lam*tt);var px=40+tt/30000*400;var py=200-N*1.6;if(tt==0)x.moveTo(px,py);else x.lineTo(px,py);}
+  x.stroke();
+  var N=N0*Math.exp(-lam*t);
+  x.fillStyle="#22d3ee";x.beginPath();x.arc(40+t/30000*400,200-N*1.6,4,0,7);x.fill();
+  rd.textContent="t="+t.toFixed(0)+" 年  N=N₀e^(−λt)="+N.toFixed(0)+"  T½=ln2/λ≈"+(Math.log(2)/lam).toFixed(0)+" 年 (如¹⁴C≈5730年)";
+  t+=150;if(t>30000)t=0;
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw();
+ slider(box,"衰变常数 λ",0.5e-4,3e-4,0.1e-4,1.21e-4," /年",function(v){lam=v;});
+};
+DEMOS.photoelectric=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var nu=8,W0=2.3,intensity=3,hEV=0.414;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(40,200);x.lineTo(440,200);x.stroke();
+  var Ek=hEV*nu-W0;
+  if(Ek>0){
+   x.fillStyle="#38bdf8";
+   for(var k=0;k<20*intensity;k++){var px=60+Math.random()*360;var py=200-Ek*30*Math.random();x.beginPath();x.arc(px,py,2,0,7);x.fill();}
+   rd.textContent="ν="+nu+"×10¹⁴Hz, hν="+(hEV*nu).toFixed(2)+" eV, W0="+W0+" eV → Ek=hν−W0="+(hEV*nu-W0).toFixed(2)+" eV  光强↑光电流↑";
+  }else{
+   rd.textContent="ν="+nu+" < ν₀="+(W0/hEV).toFixed(1)+"×10¹⁴Hz → 不能发生光电效应!";
+  }
+ }
+ draw();
+ slider(box,"频率 ν",4,12,0.5,8,"×10¹⁴Hz",function(v){nu=v;draw();});
+ slider(box,"逸出功 W0",1,5,0.1,2.3," eV",function(v){W0=v;draw();});
+ slider(box,"光强",1,5,0.5,3,"",function(v){intensity=v;draw();});
+};
+DEMOS.relativity=function(box){
+ var c=mkcanvas(box,480,240);var x=c.getContext("2d");var rd=readout(box);
+ var v=0.3,c0=1;
+ function draw(){
+  x.clearRect(0,0,480,240);
+  var g=1/Math.sqrt(1-v*v/(c0*c0));
+  x.strokeStyle="#94a3b8";x.beginPath();x.moveTo(60,80);x.lineTo(260,80);x.stroke();
+  var L0=200,Lr=L0/g;
+  x.strokeStyle="#38bdf8";x.lineWidth=3;x.beginPath();x.moveTo(60,140);x.lineTo(60+Lr,140);x.stroke();
+  x.fillStyle="#e2e8f0";x.font="11px sans-serif";x.fillText("静止杆 L0",60,72);x.fillText("运动杆 L=L0/γ  (尺缩)",60,162);
+  rd.textContent="v="+v+"c  γ=1/√(1−v²/c²)="+g.toFixed(2)+"  运动杆长="+(Lr).toFixed(0)+"  钟慢×γ (c=3×10⁸m/s)";
+ }
+ draw();
+ slider(box,"速度 v (×c)",0.1,0.95,0.05,0.3,"",function(val){v=val;draw();});
+};
+DEMOS.timing=function(box){
+ var c=mkcanvas(box,480,160);var x=c.getContext("2d");var rd=readout(box);
+ var a=2,T=0.02,v0=1;
+ function draw(){
+  x.clearRect(0,0,480,160);
+  x.strokeStyle="#475569";x.beginPath();x.moveTo(40,80);x.lineTo(440,80);x.stroke();
+  var pts=[];
+  for(var k=0;k<8;k++){var v=v0+a*k*T;var d=v*T+0.5*a*(k*T)*(k*T);var X=40+d*40;pts.push(X);x.fillStyle="#38bdf8";x.beginPath();x.arc(X,80,4,0,7);x.fill();}
+  var v5=(pts[6]-pts[4])/(2*T);
+  var da=((pts[7]-pts[4])-(pts[3]-pts[0]))/(9*T*T);
+  rd.textContent="打点累积 xₙ (T="+(T*1000).toFixed(0)+" ms)  v₅=(x₆−x₄)/2T="+v5.toFixed(2)+"  a=Δx/T²="+da.toFixed(2);
+ }
+ draw();
+ slider(box,"加速度 a",0.5,5,0.5,2,"",function(v){a=v;draw();});
+ slider(box,"打点周期 T",0.02,0.2,0.01,0.02," s",function(v){T=v;draw();});
+};
+DEMOS.design=function(box){
+ var c=mkcanvas(box,480,120);var x=c.getContext("2d");var rd=readout(box);
+ var steps=["定原理","选器材","列测量量","推表达式"];var idx=0,acc=0,last=0;
+ function draw(ts){
+  x.clearRect(0,0,480,120);
+  for(var i=0;i<4;i++){x.fillStyle=i==idx?"#38bdf8":"#1e293b";x.fillRect(20+i*115,40,100,40);x.strokeStyle="#475569";x.strokeRect(20+i*115,40,100,40);x.fillStyle="#e2e8f0";x.font="13px sans-serif";x.fillText(steps[i],28+i*115,64);}
+  rd.textContent="设计实验四步走："+steps.join(" → ")+"  (当前："+steps[idx]+")";
+  if(!last)last=ts;acc+=ts-last;last=ts;
+  if(acc>700){idx=(idx+1)%4;acc=0;}
+  var id=requestAnimationFrame(draw);curCancel=function(){cancelAnimationFrame(id);};
+ }
+ draw(0);
+};
+function runDemo(type,box){stop();box.innerHTML="";var fn=DEMOS[type];if(fn)fn(box);var tr=DEMO_TRAP[type];if(tr){var d=document.createElement("div");d.className="trap";d.innerHTML="⚠ <b>命题陷阱：</b>"+tr;box.appendChild(d);}}
+
+const grid=document.getElementById('grid');
+DATA.forEach(function(m){
+  var sec=document.createElement('div');sec.className='mod-sec';
+  var h=document.createElement('h2');h.textContent=m.name;h.style.borderLeftColor=m.color;sec.appendChild(h);
+  var cards=document.createElement('div');cards.className='cards';
+  m.points.forEach(function(p){
+    var card=document.createElement('div');card.className='dcard';
+    var t=document.createElement('div');t.className='dtitle';t.textContent=p.name;card.appendChild(t);
+    var box=document.createElement('div');box.className='demo';box.setAttribute('data-demo',p.demo);card.appendChild(box);
+    var tr=DEMO_TRAP[p.demo];if(tr){var d=document.createElement('div');d.className='trap';d.innerHTML='⚠ <b>命题陷阱：</b>'+tr;card.appendChild(d);}
+    cards.appendChild(card);
+  });
+  sec.appendChild(cards);grid.appendChild(sec);
+});
+function runAll(){document.querySelectorAll('[data-demo]').forEach(function(el){var fn=DEMOS[el.getAttribute('data-demo')];if(fn)fn(el);});}
+runAll();
+</script>
+</body></html>
