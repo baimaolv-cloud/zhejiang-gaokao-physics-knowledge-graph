@@ -225,7 +225,7 @@ for _mi, _m in enumerate(modules):
 
 # 动态演示类型（与 27 考点一一对应）
 DEMO = [
- ["vector","vgraph","balance","newton2","projectile","circle","orbit","energy"],
+ ["vector","vgraph","balance","newton2","projectile","circle","orbit","collision"],
  ["efield","circuit","lorentz","induction","acwave","emwave"],
  ["brown","gaslaw","thermo"],
  ["refraction","interference"],
