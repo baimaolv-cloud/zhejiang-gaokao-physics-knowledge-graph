@@ -65,15 +65,21 @@ section.show{display:block}
 .modlist{display:flex;flex-wrap:wrap;gap:10px;margin:14px auto 0;justify-content:center;max-width:720px}
 .modpill{background:#e0f2fe;color:#0369a1;padding:6px 12px;border-radius:20px;font-size:13px;font-weight:600}
 /* 考点细化 */
-#detail.show{display:flex;gap:16px;align-items:flex-start}
-#nav{width:240px;flex:none;max-height:80vh;overflow:auto;background:#0f1a30;border-radius:10px;padding:10px}
-.mod-h{font-weight:700;color:#7dd3fc;margin:10px 0 4px;font-size:13px}
-.pt{padding:5px 10px;margin:2px 0;cursor:pointer;border-radius:6px;font-size:13px;color:#cbd5e1}
+#detail.show{display:flex;gap:12px;align-items:flex-start}
+#nav{width:120px;flex:none;max-height:80vh;overflow:auto;background:#0f1a30;border-radius:10px;padding:8px;font-size:12px}
+.mod-h{font-weight:700;color:#7dd3fc;margin:10px 0 4px;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pt{padding:4px 6px;margin:2px 0;cursor:pointer;border-radius:6px;font-size:12px;color:#cbd5e1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pt:hover{background:#1e293b}
 .pt.sel{background:#0ea5e9;color:#fff}
 #main{flex:1;max-height:80vh;overflow:auto;min-width:0}
-.card{background:#0f1a30;border-radius:12px;padding:18px}
-.card h2{margin:0 0 12px;color:#fff;font-size:18px}
+.card{background:#0f1a30;border-radius:12px;padding:16px}
+.card h2{margin:0 0 12px;color:#fff;font-size:16px;word-break:keep-all;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(min-width:640px){
+#nav{width:240px;padding:10px;font-size:13px}
+.mod-h{font-size:13px}
+.pt{padding:5px 10px;font-size:13px}
+.card h2{font-size:20px;white-space:normal}
+}
 .lab{font-weight:700;color:#38bdf8;margin:10px 0 4px;font-size:13px}
 .sub{margin:4px 0;padding-left:18px;line-height:1.7}
 .sec{margin:8px 0}
@@ -173,7 +179,7 @@ document.querySelectorAll('.tab').forEach(t=>{
 function renderNav(){
   const nav=document.getElementById('nav'); nav.innerHTML='';
   mods.forEach(m=>{
-    const h=document.createElement('div'); h.className='mod-h'; h.textContent=m.name+' ('+m.weight+')';
+    const h=document.createElement('div'); h.className='mod-h'; h.textContent=m.name+' '+m.weight; h.title=m.name+' '+m.weight;
     nav.appendChild(h);
     m.points.forEach(p=>{
       const d=document.createElement('div'); d.className='pt'; d.textContent=p.name;
@@ -223,7 +229,7 @@ function buildDemos(){
 function buildPractice(){
   const wrap=document.getElementById('practiceWrap'); let html='';
   mods.forEach(m=>{
-    html+='<h2 class="pm">'+m.name+' <span>('+m.weight+')</span></h2>';
+    html+='<h2 class="pm">'+m.name+' <span>'+m.weight+'</span></h2>';
     m.points.forEach(p=>{
       const ex=p.exam; const isReal=!ex.src.startsWith('命卷视角');
       html+='<div class="pc"><h3>'+p.name+'</h3>';
