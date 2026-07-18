@@ -1,6 +1,6 @@
 # 浙江新高考物理 · 考点知识图谱系统 · 单机文件夹版
 
-> 命卷人视角出品 · 版本 v1.1 · 完全离线 / 零依赖
+> 命卷人视角出品 · 版本 v1.3 · 完全离线 / 零依赖
 
 ## 产品定位
 面向浙江新高考物理命卷与教学的<strong>考点知识图谱系统</strong>。五层能力递进：
@@ -14,7 +14,8 @@
 ├── modules/              # 三大交互模块（自包含 HTML）
 │   ├── knowledge-graph.html   # 知识图谱总览
 │   ├── detailed-graph.html    # 考点细化与真题体系
-│   └── demos.html             # 课堂演示版
+│   ├── demos.html             # 课堂演示版
+│   └── comprehensive.html     # 综合突破·破题解析
 └── docs/                 # 文档与资料
     ├── practice.html         # 真题练习册（离线可读）
     ├── practice.md            # 真题练习册（Markdown 源）

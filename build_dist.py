@@ -7,11 +7,12 @@ SRC = {
     "detailed": os.path.join(BASE, "physics_detailed_graph.html"),
     "demos": os.path.join(BASE, "physics_demos.html"),
     "practice_md": os.path.join(BASE, "physics_practice.md"),
+    "comprehensive": os.path.join(BASE, "comprehensive.html"),
 }
 OFFLINE = os.path.join(BASE, "物理知识图谱_离线版")
 STANDALONE = os.path.join(BASE, "物理知识图谱_单机版")
 
-VER = "v1.1"
+VER = "v1.3"
 TITLE = "浙江新高考物理 · 考点知识图谱系统"
 
 # ---------- 轻量 Markdown -> HTML ----------
@@ -96,6 +97,7 @@ code{background:#1e293b;color:#e2e8f0;padding:2px 8px;border-radius:5px;font-siz
 • <code>detailed-graph.html</code> —— 考点细化与真题体系（细分 + 真题 + 易错/易混/妙法 + 动态演示）<br>
 • <code>demos.html</code> —— 课堂演示版（纯仿真，投屏用）<br>
 • <code>practice.html</code> —— 真题练习册（离线可读）<br>
+• <code>comprehensive.html</code> —— 综合突破·破题解析（多知识点综合体，真实浙江选考真题）<br>
 • <code>index.html</code> —— 离线版首页（入口导航）<br>
 • <code>离线使用说明.html</code> —— 使用说明</div>
 <div class="card warn"><b>⚠ 使用提示</b><br>
@@ -131,6 +133,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}
 <a class="mod" href="detailed-graph.html"><h3>② 考点细化与真题体系</h3><p>27 考点 · 123 细分 · 每点配真实浙江真题 + 易错/易混/妙法 + 动态演示。</p></a>
 <a class="mod" href="demos.html"><h3>③ 课堂演示版</h3><p>纯仿真投屏页，按模块铺开 27 考点动态演示，含命题陷阱。</p></a>
 <a class="mod" href="practice.html"><h3>④ 真题练习册</h3><p>离线可读练习册，可打印 / 组卷。</p></a>
+<a class="mod" href="comprehensive.html"><h3>⑤ 综合突破·破题解析</h3><p>4 道真实浙江选考多知识点综合大题，结构化破题（考点定位→模型建构→分步求解→易错陷阱）。</p></a>
 </div>
 <div class="sec"><h2>使用说明</h2>
 <p>1. 本文件夹为<strong>完全离线交付包</strong>，断网双击任一 <code>.html</code> 即可；<br>
@@ -166,6 +169,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
 <a class="mod" href="modules/detailed-graph.html"><h3>② 考点细化与真题体系</h3><p>27 考点 · 123 细分 · 每点配真题（27 道真实浙江选考真题）+ 易错/易混/妙法 + 动态演示。</p></a>
 <a class="mod" href="modules/demos.html"><h3>③ 课堂演示版</h3><p>纯仿真投屏页，按模块铺开 27 考点动态演示，含命题陷阱浮层。</p></a>
 <a class="mod" href="docs/practice.html"><h3>④ 真题练习册</h3><p>同体系可打印 / 组卷文字版，离线可读。</p></a>
+<a class="mod" href="modules/comprehensive.html"><h3>⑤ 综合突破·破题解析</h3><p>4 道真实浙江选考多知识点综合大题，结构化破题（考点定位→模型建构→分步求解→易错陷阱）。</p></a>
 </div>
 <div class="sec"><h2>使用说明</h2>
 <p>1. 双击 <code>index.html</code> 进入本首页，点击上方卡片打开对应模块；<br>
@@ -195,7 +199,8 @@ README_MD = """# __TITLE__ · 单机文件夹版
 ├── modules/              # 三大交互模块（自包含 HTML）
 │   ├── knowledge-graph.html   # 知识图谱总览
 │   ├── detailed-graph.html    # 考点细化与真题体系
-│   └── demos.html             # 课堂演示版
+│   ├── demos.html             # 课堂演示版
+│   └── comprehensive.html     # 综合突破·破题解析
 └── docs/                 # 文档与资料
     ├── practice.html         # 真题练习册（离线可读）
     ├── practice.md            # 真题练习册（Markdown 源）
@@ -219,7 +224,8 @@ README_MD = """# __TITLE__ · 单机文件夹版
 CHANGELOG_MD = """# 变更日志 · __TITLE__
 
 ## __VER__ （本次交付）
-- 初始交付，含两套打包形态：
+- 新增「综合突破·破题解析」模块：4 道真实浙江选考多知识点综合大题（力电磁综合 / 力学多过程 / 力热综合 / 实验设计综合），每题结构化破题（考点定位→模型建构→分步求解→易错陷阱）。
+- 含两套打包形态：
   - **离线版**：扁平文件夹，断网即开即用，练习册转 HTML 离线可读；
   - **单机文件夹版**：结构化目录（index 首页 + modules + docs + README + CHANGELOG），便于归档与二次开发。
 - 五层能力：知识图谱总览 / 考点细化（27 考点·123 细分）/ 易错易混妙法 / 动态演示（25 种仿真，真实量纲 + 命题陷阱浮层）/ 真题练习（27 道真实浙江选考真题）。
@@ -244,6 +250,7 @@ def build():
     shutil.copy(SRC["graph"], os.path.join(OFFLINE, "knowledge-graph.html"))
     shutil.copy(SRC["detailed"], os.path.join(OFFLINE, "detailed-graph.html"))
     shutil.copy(SRC["demos"], os.path.join(OFFLINE, "demos.html"))
+    shutil.copy(SRC["comprehensive"], os.path.join(OFFLINE, "comprehensive.html"))
     write_file(os.path.join(OFFLINE, "practice.html"), practice_html())
     write_file(os.path.join(OFFLINE, "index.html"),
                OFFLINE_INDEX_HTML.replace("__TITLE__", TITLE).replace("__VER__", VER))
@@ -258,6 +265,7 @@ def build():
     shutil.copy(SRC["graph"], os.path.join(mod_dir, "knowledge-graph.html"))
     shutil.copy(SRC["detailed"], os.path.join(mod_dir, "detailed-graph.html"))
     shutil.copy(SRC["demos"], os.path.join(mod_dir, "demos.html"))
+    shutil.copy(SRC["comprehensive"], os.path.join(mod_dir, "comprehensive.html"))
     write_file(os.path.join(doc_dir, "practice.html"), practice_html())
     shutil.copy(SRC["practice_md"], os.path.join(doc_dir, "practice.md"))
     write_file(os.path.join(STANDALONE, "index.html"),

@@ -7,7 +7,7 @@ SRC  = os.path.join(ROOT, "physics_detailed_graph.html")
 SVG  = os.path.join(ROOT, "physics_knowledge_graph.svg")
 OUT_HTML = os.path.join(ROOT, "物理知识图谱_单文件版.html")
 OUT_ZIP = os.path.join(ROOT, "物理知识图谱_单文件版.zip")
-VER  = "v1.2"
+VER  = "v1.3"
 
 h = open(SRC, encoding="utf-8").read()
 svg_raw = open(SVG, encoding="utf-8").read()
@@ -19,6 +19,11 @@ data_json = h[i + len("const DATA = "):j]
 # ---------- 2) 提取 DEMO_TRAP (单层对象, 无嵌套{}) ----------
 tm = re.search(r"const DEMO_TRAP = (\{[^{}]*\})", h, re.S)
 trap_json = tm.group(1)
+
+# ---------- 提取 COMPREHENSIVE（单行数组，json.dumps 无换行）----------
+ci = h.index("const COMPREHENSIVE = ")
+ce = h.index("\n", ci)
+comprehensive_json = h[ci + len("const COMPREHENSIVE = "):ce].rstrip().rstrip(";")
 
 # ---------- 3) 提取 DEMOS 引擎块 + runDemo 函数 ----------
 di = h.index("function dist("); ri = h.index("function runDemo")
@@ -110,6 +115,17 @@ section.show{display:block}
 .pex i{color:#86efac;display:block;margin-top:3px;font-style:normal}
 .pe{font-size:13px;line-height:1.7;margin:4px 0}
 .pe b{color:#38bdf8}
+/* 综合突破 */
+.comp{border-left:4px solid #f59e0b;background:#0b1426;border-radius:10px;padding:14px 18px;margin:12px 0}
+.comp h3{margin:0 0 4px;color:#fff;font-size:16px;word-break:keep-all}
+.comp .csrc{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#1e293b;color:#7dd3fc;margin-bottom:8px}
+.comp .klist{margin:6px 0}
+.comp .klist span{display:inline-block;background:#1e293b;color:#38bdf8;font-size:11px;padding:2px 8px;border-radius:10px;margin:2px 4px 2px 0}
+.comp .cq{font-size:14px;line-height:1.75;margin:6px 0}
+.comp .bd{margin:10px 0 0}
+.comp .bd .bstep{background:#0f1a30;border-left:4px solid #22d3ee;padding:8px 12px;border-radius:0 8px 8px 0;margin:6px 0;font-size:13px;line-height:1.7;color:#cbd5e1}
+.comp .bd .bstep b{color:#38bdf8;margin-right:4px}
+.comp .ca{color:#86efac;font-size:13px;line-height:1.7;background:#0b1f17;border-left:4px solid #22c55e;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:10px}
 footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
 </style>
 </head>
@@ -123,6 +139,7 @@ footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
   <div class="tab" data-tab="detail">② 考点细化与真题</div>
   <div class="tab" data-tab="demos">③ 课堂动态演示</div>
   <div class="tab" data-tab="practice">④ 真题练习册</div>
+  <div class="tab" data-tab="comprehensive">⑤ 综合突破·破题解析</div>
 </div>
 
 <section id="overview">
@@ -143,11 +160,16 @@ footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
   <div id="practiceWrap"></div>
 </section>
 
-<footer>物理为浙江“7选3”选考科目 · 27 主知识点 / 123 细分 / 27 道真实浙江选考真题 / 25 种动态演示（真实量纲 + 命题陷阱）· 单文件离线版</footer>
+<section id="comprehensive">
+  <div id="comprehensiveWrap"></div>
+</section>
+
+<footer>物理为浙江“7选3”选考科目 · 27 主知识点 / 123 细分 / 27 道真实浙江选考真题 / 25 种动态演示 / 4 道综合突破破题解析（真实量纲 + 命题陷阱）· 单文件离线版</footer>
 
 <script>
 const DATA = __DATA__;
 const DEMO_TRAP = __TRAP__;
+const COMPREHENSIVE = __COMPREHENSIVE__;
 __DEMOS__
 __RUNDEMO__
 
@@ -243,9 +265,27 @@ function buildPractice(){
   wrap.innerHTML=html;
 }
 
+// ---------- 综合突破·破题解析 ----------
+function buildComprehensive(){
+  const wrap=document.getElementById('comprehensiveWrap'); let html='';
+  COMPREHENSIVE.forEach(c=>{
+    html+='<div class="comp"><h3>'+c.title+'</h3>';
+    html+='<div class="csrc">'+c.src+' · '+c.type+'</div>';
+    html+='<div class="klist">'+c.knowledge.map(k=>'<span>'+k+'</span>').join('')+'</div>';
+    html+='<div class="cq"><b>题目：</b>'+c.q+'</div>';
+    html+='<div class="bd">';
+    c.breakdown.forEach(b=>{ html+='<div class="bstep"><b>'+b.step+'</b>'+b.text+'</div>'; });
+    html+='</div>';
+    html+='<div class="ca"><b>答案要点：</b>'+c.a+'</div>';
+    html+='</div>';
+  });
+  wrap.innerHTML=html;
+}
+
 // ---------- 初始化 ----------
 renderNav();
 buildPractice();
+buildComprehensive();
 showTab('detail');
 const fm=mods[0];
 showPoint(fm, fm.points[0]);
@@ -261,7 +301,8 @@ out = (TEMPLATE
        .replace("__DATA__", data_json)
        .replace("__TRAP__", trap_json)
        .replace("__DEMOS__", demos_block)
-       .replace("__RUNDEMO__", run_demo_fn))
+       .replace("__RUNDEMO__", run_demo_fn)
+       .replace("__COMPREHENSIVE__", comprehensive_json))
 
 with open(OUT_HTML, "w", encoding="utf-8") as f:
     f.write(out)
@@ -273,3 +314,54 @@ if os.path.exists(OUT_ZIP):
 with zipfile.ZipFile(OUT_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
     z.write(OUT_HTML, os.path.basename(OUT_HTML))
 print("zip 已生成:", OUT_ZIP)
+
+# ---------- 7) 综合突破独立页（供离线版/单机版分发） ----------
+COMP_HTML = '''<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>浙江新高考物理 · 综合突破·破题解析</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#0b1220;color:#e2e8f0}
+header{background:linear-gradient(120deg,#1e3a8a,#0ea5e9);color:#fff;padding:18px 22px}
+header h1{margin:0;font-size:20px} header p{margin:4px 0 0;font-size:12px;color:#cbd5e1}
+main{padding:18px 20px;max-width:960px;margin:0 auto}
+.comp{border-left:4px solid #f59e0b;background:#0b1426;border-radius:10px;padding:14px 18px;margin:12px 0}
+.comp h3{margin:0 0 4px;color:#fff;font-size:16px;word-break:keep-all}
+.comp .csrc{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#1e293b;color:#7dd3fc;margin-bottom:8px}
+.comp .klist{margin:6px 0}
+.comp .klist span{display:inline-block;background:#1e293b;color:#38bdf8;font-size:11px;padding:2px 8px;border-radius:10px;margin:2px 4px 2px 0}
+.comp .cq{font-size:14px;line-height:1.75;margin:6px 0}
+.comp .bd{margin:10px 0 0}
+.comp .bd .bstep{background:#0f1a30;border-left:4px solid #22d3ee;padding:8px 12px;border-radius:0 8px 8px 0;margin:6px 0;font-size:13px;line-height:1.7;color:#cbd5e1}
+.comp .bd .bstep b{color:#38bdf8;margin-right:4px}
+.comp .ca{color:#86efac;font-size:13px;line-height:1.7;background:#0b1f17;border-left:4px solid #22c55e;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:10px}
+footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
+</style></head><body>
+<header><h1>浙江新高考物理 · 综合突破·破题解析</h1><p>命卷人视角 · 多知识点综合体 · 真实浙江选考真题 · 结构化破题（考点定位 → 模型建构 → 分步求解 → 易错陷阱）</p></header>
+<main><div id="wrap"></div></main>
+<footer>物理为浙江“7选3”选考科目 · 4 道综合突破真题（真实题源）· 离线单文件版</footer>
+<script>
+const COMPREHENSIVE = __COMPREHENSIVE__;
+function buildComprehensive(){
+  const wrap=document.getElementById('wrap'); let html='';
+  COMPREHENSIVE.forEach(c=>{
+    html+='<div class="comp"><h3>'+c.title+'</h3>';
+    html+='<div class="csrc">'+c.src+' · '+c.type+'</div>';
+    html+='<div class="klist">'+c.knowledge.map(k=>'<span>'+k+'</span>').join('')+'</div>';
+    html+='<div class="cq"><b>题目：</b>'+c.q+'</div>';
+    html+='<div class="bd">';
+    c.breakdown.forEach(b=>{ html+='<div class="bstep"><b>'+b.step+'</b>'+b.text+'</div>'; });
+    html+='</div>';
+    html+='<div class="ca"><b>答案要点：</b>'+c.a+'</div>';
+    html+='</div>';
+  });
+  wrap.innerHTML=html;
+}
+buildComprehensive();
+</script>
+</body></html>'''
+COMP_HTML = COMP_HTML.replace("__COMPREHENSIVE__", comprehensive_json)
+OUT_COMP = os.path.join(ROOT, "comprehensive.html")
+with open(OUT_COMP, "w", encoding="utf-8") as f:
+    f.write(COMP_HTML)
+print("综合突破独立页 ->", OUT_COMP)
