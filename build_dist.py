@@ -97,7 +97,7 @@ code{background:#1e293b;color:#e2e8f0;padding:2px 8px;border-radius:5px;font-siz
 • <code>detailed-graph.html</code> —— 考点细化与真题体系（细分 + 真题 + 易错/易混/妙法 + 动态演示）<br>
 • <code>demos.html</code> —— 课堂演示版（纯仿真，投屏用）<br>
 • <code>practice.html</code> —— 真题练习册（离线可读）<br>
-• <code>comprehensive.html</code> —— 综合突破·破题解析（多知识点综合体，真实浙江选考真题）<br>
+• <code>comprehensive.html</code> —— 综合题突破（多知识点综合体，真实浙江选考真题）<br>
 • <code>index.html</code> —— 离线版首页（入口导航）<br>
 • <code>离线使用说明.html</code> —— 使用说明</div>
 <div class="card warn"><b>⚠ 使用提示</b><br>
@@ -133,7 +133,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:18px}
 <a class="mod" href="detailed-graph.html"><h3>② 考点细化与真题体系</h3><p>27 考点 · 123 细分 · 每点配真实浙江真题 + 易错/易混/妙法 + 动态演示。</p></a>
 <a class="mod" href="demos.html"><h3>③ 课堂演示版</h3><p>纯仿真投屏页，按模块铺开 27 考点动态演示，含命题陷阱。</p></a>
 <a class="mod" href="practice.html"><h3>④ 真题练习册</h3><p>离线可读练习册，可打印 / 组卷。</p></a>
-<a class="mod" href="comprehensive.html"><h3>⑤ 综合突破·破题解析</h3><p>4 道真实浙江选考多知识点综合大题，结构化破题（考点定位→模型建构→分步求解→易错陷阱）。</p></a>
+<a class="mod" href="comprehensive.html"><h3>⑤ 综合题突破</h3><p>4 道真实浙江选考多知识点综合大题，结构化破题（考点定位→模型建构→分步求解→易错陷阱）。</p></a>
 </div>
 <div class="sec"><h2>使用说明</h2>
 <p>1. 本文件夹为<strong>完全离线交付包</strong>，断网双击任一 <code>.html</code> 即可；<br>
@@ -169,7 +169,7 @@ footer{text-align:center;color:#64748b;font-size:12px;padding:20px}
 <a class="mod" href="modules/detailed-graph.html"><h3>② 考点细化与真题体系</h3><p>27 考点 · 123 细分 · 每点配真题（27 道真实浙江选考真题）+ 易错/易混/妙法 + 动态演示。</p></a>
 <a class="mod" href="modules/demos.html"><h3>③ 课堂演示版</h3><p>纯仿真投屏页，按模块铺开 27 考点动态演示，含命题陷阱浮层。</p></a>
 <a class="mod" href="docs/practice.html"><h3>④ 真题练习册</h3><p>同体系可打印 / 组卷文字版，离线可读。</p></a>
-<a class="mod" href="modules/comprehensive.html"><h3>⑤ 综合突破·破题解析</h3><p>4 道真实浙江选考多知识点综合大题，结构化破题（考点定位→模型建构→分步求解→易错陷阱）。</p></a>
+<a class="mod" href="modules/comprehensive.html"><h3>⑤ 综合题突破</h3><p>4 道真实浙江选考多知识点综合大题，结构化破题（考点定位→模型建构→分步求解→易错陷阱）。</p></a>
 </div>
 <div class="sec"><h2>使用说明</h2>
 <p>1. 双击 <code>index.html</code> 进入本首页，点击上方卡片打开对应模块；<br>
@@ -200,7 +200,7 @@ README_MD = """# __TITLE__ · 单机文件夹版
 │   ├── knowledge-graph.html   # 知识图谱总览
 │   ├── detailed-graph.html    # 考点细化与真题体系
 │   ├── demos.html             # 课堂演示版
-│   └── comprehensive.html     # 综合突破·破题解析
+│   └── comprehensive.html     # 综合题突破
 └── docs/                 # 文档与资料
     ├── practice.html         # 真题练习册（离线可读）
     ├── practice.md            # 真题练习册（Markdown 源）
@@ -224,7 +224,7 @@ README_MD = """# __TITLE__ · 单机文件夹版
 CHANGELOG_MD = """# 变更日志 · __TITLE__
 
 ## __VER__ （本次交付）
-- 新增「综合突破·破题解析」模块：4 道真实浙江选考多知识点综合大题（力电磁综合 / 力学多过程 / 力热综合 / 实验设计综合），每题结构化破题（考点定位→模型建构→分步求解→易错陷阱）。
+- 新增「综合题突破」模块：4 道真实浙江选考多知识点综合大题（力电磁综合 / 力学多过程 / 力热综合 / 实验设计综合），每题结构化破题（考点定位→模型建构→分步求解→易错陷阱）。
 - 含两套打包形态：
   - **离线版**：扁平文件夹，断网即开即用，练习册转 HTML 离线可读；
   - **单机文件夹版**：结构化目录（index 首页 + modules + docs + README + CHANGELOG），便于归档与二次开发。

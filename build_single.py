@@ -115,7 +115,7 @@ section.show{display:block}
 .pex i{color:#86efac;display:block;margin-top:3px;font-style:normal}
 .pe{font-size:13px;line-height:1.7;margin:4px 0}
 .pe b{color:#38bdf8}
-/* 综合突破 */
+/* 综合题突破 */
 .comp{border-left:4px solid #f59e0b;background:#0b1426;border-radius:10px;padding:14px 18px;margin:12px 0}
 .comp h3{margin:0 0 4px;color:#fff;font-size:16px;word-break:keep-all}
 .comp .csrc{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:10px;background:#1e293b;color:#7dd3fc;margin-bottom:8px}
@@ -139,7 +139,7 @@ footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
   <div class="tab" data-tab="detail">② 考点细化与真题</div>
   <div class="tab" data-tab="demos">③ 课堂动态演示</div>
   <div class="tab" data-tab="practice">④ 真题练习册</div>
-  <div class="tab" data-tab="comprehensive">⑤ 综合突破·破题解析</div>
+  <div class="tab" data-tab="comprehensive">⑤ 综合题突破</div>
 </div>
 
 <section id="overview">
@@ -164,7 +164,7 @@ footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
   <div id="comprehensiveWrap"></div>
 </section>
 
-<footer>物理为浙江“7选3”选考科目 · 27 主知识点 / 123 细分 / 27 道真实浙江选考真题 / 25 种动态演示 / 4 道综合突破破题解析（真实量纲 + 命题陷阱）· 单文件离线版</footer>
+<footer>物理为浙江“7选3”选考科目 · 27 主知识点 / 123 细分 / 27 道真实浙江选考真题 / 25 种动态演示 / 4 道综合题突破（真实量纲 + 命题陷阱）· 单文件离线版</footer>
 
 <script>
 const DATA = __DATA__;
@@ -265,7 +265,7 @@ function buildPractice(){
   wrap.innerHTML=html;
 }
 
-// ---------- 综合突破·破题解析 ----------
+// ---------- 综合题突破 ----------
 function buildComprehensive(){
   const wrap=document.getElementById('comprehensiveWrap'); let html='';
   COMPREHENSIVE.forEach(c=>{
@@ -315,10 +315,10 @@ with zipfile.ZipFile(OUT_ZIP, "w", zipfile.ZIP_DEFLATED) as z:
     z.write(OUT_HTML, os.path.basename(OUT_HTML))
 print("zip 已生成:", OUT_ZIP)
 
-# ---------- 7) 综合突破独立页（供离线版/单机版分发） ----------
+# ---------- 7) 综合题突破独立页（供离线版/单机版分发） ----------
 COMP_HTML = '''<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>浙江新高考物理 · 综合突破·破题解析</title>
+<title>浙江新高考物理 · 综合题突破</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#0b1220;color:#e2e8f0}
@@ -337,9 +337,9 @@ main{padding:18px 20px;max-width:960px;margin:0 auto}
 .comp .ca{color:#86efac;font-size:13px;line-height:1.7;background:#0b1f17;border-left:4px solid #22c55e;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:10px}
 footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
 </style></head><body>
-<header><h1>浙江新高考物理 · 综合突破·破题解析</h1><p>命卷人视角 · 多知识点综合体 · 真实浙江选考真题 · 结构化破题（考点定位 → 模型建构 → 分步求解 → 易错陷阱）</p></header>
+<header><h1>浙江新高考物理 · 综合题突破</h1><p>命卷人视角 · 多知识点综合体 · 真实浙江选考真题 · 结构化破题（考点定位 → 模型建构 → 分步求解 → 易错陷阱）</p></header>
 <main><div id="wrap"></div></main>
-<footer>物理为浙江“7选3”选考科目 · 4 道综合突破真题（真实题源）· 离线单文件版</footer>
+<footer>物理为浙江“7选3”选考科目 · 4 道综合题突破真题（真实题源）· 离线单文件版</footer>
 <script>
 const COMPREHENSIVE = __COMPREHENSIVE__;
 function buildComprehensive(){
@@ -364,4 +364,4 @@ COMP_HTML = COMP_HTML.replace("__COMPREHENSIVE__", comprehensive_json)
 OUT_COMP = os.path.join(ROOT, "comprehensive.html")
 with open(OUT_COMP, "w", encoding="utf-8") as f:
     f.write(COMP_HTML)
-print("综合突破独立页 ->", OUT_COMP)
+print("综合题突破独立页 ->", OUT_COMP)

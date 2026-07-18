@@ -15,7 +15,7 @@
 │   ├── knowledge-graph.html   # 知识图谱总览
 │   ├── detailed-graph.html    # 考点细化与真题体系
 │   ├── demos.html             # 课堂演示版
-│   └── comprehensive.html     # 综合突破·破题解析
+│   └── comprehensive.html     # 综合题突破
 └── docs/                 # 文档与资料
     ├── practice.html         # 真题练习册（离线可读）
     ├── practice.md            # 真题练习册（Markdown 源）
