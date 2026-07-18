@@ -127,6 +127,8 @@ section.show{display:block}
 .comp .bd .bstep b{color:#38bdf8;margin-right:4px}
 .comp .ca{color:#86efac;font-size:13px;line-height:1.7;background:#0b1f17;border-left:4px solid #22c55e;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:10px}
 footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
+.comp .cfig{margin:10px 0;text-align:center}
+.comp .cfig svg{max-width:480px;width:100%;height:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 </style>
 </head>
 <body>
@@ -273,6 +275,7 @@ function buildComprehensive(){
     html+='<div class="csrc">'+c.src+' · '+c.type+'</div>';
     html+='<div class="klist">'+c.knowledge.map(k=>'<span>'+k+'</span>').join('')+'</div>';
     html+='<div class="cq"><b>题目：</b>'+c.q+'</div>';
+    if(c.fig) html+='<div class="cfig">'+c.fig+'</div>';
     html+='<div class="bd">';
     c.breakdown.forEach(b=>{ html+='<div class="bstep"><b>'+b.step+'</b>'+b.text+'</div>'; });
     html+='</div>';
@@ -336,6 +339,8 @@ main{padding:18px 20px;max-width:960px;margin:0 auto}
 .comp .bd .bstep b{color:#38bdf8;margin-right:4px}
 .comp .ca{color:#86efac;font-size:13px;line-height:1.7;background:#0b1f17;border-left:4px solid #22c55e;padding:8px 12px;border-radius:0 8px 8px 0;margin-top:10px}
 footer{color:#64748b;font-size:12px;text-align:center;padding:14px}
+.comp .cfig{margin:10px 0;text-align:center}
+.comp .cfig svg{max-width:480px;width:100%;height:auto;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25)}
 </style></head><body>
 <header><h1>浙江新高考物理 · 综合题突破</h1><p>命卷人视角 · 多知识点综合体 · 真实浙江选考真题 · 结构化破题（考点定位 → 模型建构 → 分步求解 → 易错陷阱）</p></header>
 <main><div id="wrap"></div></main>
@@ -349,6 +354,7 @@ function buildComprehensive(){
     html+='<div class="csrc">'+c.src+' · '+c.type+'</div>';
     html+='<div class="klist">'+c.knowledge.map(k=>'<span>'+k+'</span>').join('')+'</div>';
     html+='<div class="cq"><b>题目：</b>'+c.q+'</div>';
+    if(c.fig) html+='<div class="cfig">'+c.fig+'</div>';
     html+='<div class="bd">';
     c.breakdown.forEach(b=>{ html+='<div class="bstep"><b>'+b.step+'</b>'+b.text+'</div>'; });
     html+='</div>';
